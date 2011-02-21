@@ -1,0 +1,17 @@
+
+div.programmedresp_functiondescription {
+    border-style: solid;
+    width: 650px;
+    margin: 30px auto 30px auto;
+    padding: 3px;
+}
+
+#id_responseslabels {
+    visibility: hidden;
+    display: none;
+}
+
+.hidden_arg {
+    visibility: hidden;
+    display: none;
+}
