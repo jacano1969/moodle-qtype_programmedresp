@@ -224,9 +224,9 @@ function update_addfunctionurl() {
 	// Add the index
 	var fcatidindex = functionelement.href.indexOf("&fcatid", 0);
 	if (fcatidindex == -1) {
-		functionelement.href = functionelement.href + "&fcatid=" + categoryelement.selectedIndex;
+		functionelement.href = functionelement.href + "&fcatid=" + categoryelement.value;
 	} else {
-		functionelement.href = functionelement.href.substr(0, fcatidindex) + "&fcatid=" + categoryelement.selectedIndex;
+		functionelement.href = functionelement.href.substr(0, fcatidindex) + "&fcatid=" + categoryelement.value;
 	}
 	
 }

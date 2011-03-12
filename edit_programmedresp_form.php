@@ -74,7 +74,7 @@ class question_edit_programmedresp_form extends question_edit_form {
         $mform->addElement('header', 'functionheader', get_string("assignfunction", "qtype_programmedresp"));
         
         // Category select
-        $catattrs['onchange'] = 'return display_functionslist(this);';
+        $catattrs['onchange'] = 'update_addfunctionurl();return display_functionslist(this);';
         $mform->addElement('select', 'functioncategory', get_string('functioncategory', 'qtype_programmedresp'), $catoptions, $catattrs);
         
         // Dirty hack to add the function (added later through ajax)
@@ -102,7 +102,7 @@ class question_edit_programmedresp_form extends question_edit_form {
         if ($caneditfunctions) {
 	        $addfunctionsurl = $CFG->wwwroot.'/question/type/programmedresp/manage.php?action=addfunctions';
 	        $onclick = "window.open(this.href, this.target, 'menubar=0,location=0,scrollbars,resizable,width=650,height=600', true);return false;";
-	        $functionlink = '<a href="'.$addfunctionsurl.'" onclick="'.$onclick.'" onmouseover="update_addfunctionurl();" target="addfunctions" id="id_addfunctionurl">'.get_string('addfunction', 'qtype_programmedresp').'</a>';
+	        $functionlink = '<a href="'.$addfunctionsurl.'" onclick="'.$onclick.'" target="addfunctions" id="id_addfunctionurl">'.get_string('addfunction', 'qtype_programmedresp').'</a>';
 	        $mform->addElement('html', '<div class="fitem"><div class="fitemtitle"></div><div class="felement">'.$functionlink.'<br/><br/></div></div>');
         }
         

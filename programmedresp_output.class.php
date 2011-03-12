@@ -76,8 +76,7 @@ class programmedresp_output {
 	        }
         }
         
-        $attrs['onchange'] = 'return display_args(this);';
-        $this->print_form_select(get_string('function', 'qtype_programmedresp'), 'programmedrespfid', $options, $attrs);
+        $this->print_form_select(get_string('function', 'qtype_programmedresp'), 'programmedrespfid', $options);
         
     }
     

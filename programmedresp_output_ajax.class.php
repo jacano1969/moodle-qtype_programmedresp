@@ -87,7 +87,7 @@ class programmedresp_output_ajax extends programmedresp_output {
      * @param array $options Options
      * @param array $attrs Element attributes
      */
-    function print_form_select($title, $elementname, $options, $attrs) {
+    function print_form_select($title, $elementname, $options, $attrs = false) {
         
         echo '<div class="fitem"><div class="fitemtitle">'.$title.'</div><div class="felement fselect">';
         echo '<select name="'.$elementname.'" id="id_'.$elementname.'" ';
