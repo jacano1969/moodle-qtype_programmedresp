@@ -83,7 +83,20 @@ function display_args(element) {
 	functiondiv.style.visibility = "visible";
 	functiondiv.style.display = "inline";
 	
-	return display_section("action=displayargs&function=" + functionid + "&questiontext=" + get_questiontext());
+	// Concatenated vars
+	var concatstring = "";
+	for (var i = 0; i < concatnum; i++) {
+
+		var concatelement = document.getElementById("concatvar_" + i);
+		for (var elementi = 0; elementi < concatelement.options.length; elementi++) {
+			if (concatelement.options[elementi].selected) {
+				concatstring += "&concatvar_" + i + "[]=" + concatelement.options[elementi].value;
+			}
+		}
+	}
+
+	// function id + question text to extract the vars + the concatenated vars created
+	return display_section("action=displayargs&function=" + functionid + "&questiontext=" + get_questiontext() + concatstring);
 }
 
 
@@ -143,8 +156,8 @@ function add_concat_var() {
 	var maindiv = document.getElementById("id_concatvars");
 	
 	// HTML to add
-    var html = '<strong>Concat ' + concatnum + '</strong><br/>';
-    html += '<select name="concatvar_' + concatnum + '" multiple="multiple">';
+    var html = '<strong>concatvar_' + concatnum + '</strong><br/>';
+    html += '<select id="concatvar_' + concatnum + '" name="concatvar_' + concatnum + '[]" multiple="multiple">';
 	
 	// Getting var names
     var questiontextvalue = get_questiontext();
@@ -171,7 +184,7 @@ function add_concat_var() {
 
 function change_argument_type(element, argumentkey) {
 
-	var types = new Array('fixed', 'variable', 'guidedquiz');
+	var types = new Array('fixed', 'variable', 'guidedquiz', 'concat');
 	var tmpelement;
 	
 	for (var i = 0; i < types.length; i++) {

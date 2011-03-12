@@ -12,6 +12,7 @@ $string['addcategory'] = 'Afegir una categoria';
 $string['addconcatvar'] = 'Afegir una variable concatenada';
 $string['addfunction'] = 'Afegir funcions';
 $string['addingprogrammedresp'] = 'Afegint pregunta programada';
+$string['argconcat'] = 'Variable concatenada';
 $string['argfixed'] = 'Fixe';
 $string['argguidedquiz'] = 'Qüestionari guiat';
 $string['argvariable'] = 'Variable';

@@ -65,7 +65,7 @@ class question_edit_programmedresp_form extends question_edit_form {
     	
     	$mform->addElement('html', '<div id="id_vars_content">');
     	if (!empty($this->question->id)) {
-    		$outputmanager->display_vars($this->question->questiontext);
+    		$outputmanager->display_vars($this->question->questiontext, $this->programmedresp_args);
     	}
         $mform->addElement('html', '</div>');
         

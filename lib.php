@@ -17,6 +17,7 @@ define('PROGRAMMEDRESP_RESPONSEFORMAT_SIGNIFICATIVE', 2);
 define('PROGRAMMEDRESP_ARG_FIXED', 0);
 define('PROGRAMMEDRESP_ARG_VARIABLE', 1);
 define('PROGRAMMEDRESP_ARG_GUIDEDQUIZ', 2);
+define('PROGRAMMEDRESP_ARG_CONCAT', 3);
 
 
 /**
@@ -46,6 +47,44 @@ function programmedresp_get_question_vars($questiontext = false) {
     return $vars;
 }
 
+
+/**
+ * Gets the concatenated vars
+ * 
+ * @param array args Arguments data
+ * @return array Concatenated vars with vars selected
+ */
+function programmedresp_get_concat_vars($args = false) {
+
+	$concatvars = array();
+	
+	// If there are args filter by CONCAT type
+	if ($args) {
+		foreach ($args as $arg) {
+			
+			if (PROGRAMMEDRESP_ARG_CONCAT == $arg->type) {
+				$concatdata = unserialize($arg->value);
+				$concatvars[$concatdata->name] = $concatdata->name;
+			}
+		}
+		
+    // If there aren't args search on _GET
+	} else {
+		
+		// I hope 50 will be ok...
+		for ($concatnum = 0; $concatnum < 50; $concatnum++) {
+			
+			$varname = 'concatvar_'.$concatnum;
+			if ($concat = optional_param($varname, false, PARAM_ALPHANUM)) {
+				$concatvars[$varname] = $varname;
+			}
+		}
+	}
+	
+	return $concatvars;
+}
+
+
 /**
  * Gets the different attributes of the question text vars
  * @return array
@@ -67,6 +106,7 @@ function programmedresp_get_argtypes_mapping() {
 	
 	return array(PROGRAMMEDRESP_ARG_FIXED => 'fixed', 
         PROGRAMMEDRESP_ARG_VARIABLE => 'variable',
+        PROGRAMMEDRESP_ARG_CONCAT => 'concat',
         PROGRAMMEDRESP_ARG_GUIDEDQUIZ => 'guidedquiz');
 }
 

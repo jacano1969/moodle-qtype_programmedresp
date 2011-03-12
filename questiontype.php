@@ -180,7 +180,7 @@ class programmedresp_qtype extends default_questiontype {
         		$args[$i]->type = intval($value);
         		
         		
-        		// There are a form element for each var type (fixed, variable, guidedquiz) 
+        		// There are a form element for each var type (fixed, variable, concat, guidedquiz) 
         		// $argvalue contains the value of the selected element
         		$argvalue = $_POST[$argtypesmapping[intval($value)]."_".$args[$i]->argkey];
         	    $args[$i]->value = clean_param($argvalue, PARAM_TEXT);  // integer or float if it's fixed or a varname
@@ -232,6 +232,20 @@ class programmedresp_qtype extends default_questiontype {
         			print_error('errorcantfindvar', 'qtype_programmedresp', $arg->value);
         		}
         		$arg->value = $vars[$arg->value]->id;
+        	}
+        	
+        	// If it's a concat var we must serialize the concatvar_N param
+        	if ($arg->type == PROGRAMMEDRESP_ARG_CONCAT) {
+        		
+        		$concatnum = intval(substr($arg->value, 7));
+        		if (!$concatvalues = optional_param('concatvar_'.$concatnum, false, PARAM_ALPHANUM)) {
+        			print_error('errorcantfindvar', 'qtype_programmedresp', $arg->value);
+        		}
+        		
+        		$concatobj = new stdClass();
+        		$concatobj->name = 'concatvar_'.$concatnum;
+        		$concatobj->values = $concatvalues;
+        		$arg->value = serialize($concatobj);
         	}
         	
         	// Update
@@ -463,9 +477,7 @@ class programmedresp_qtype extends default_questiontype {
     			
     		case PROGRAMMEDRESP_ARG_VARIABLE:
     			
-    			$varid = $vars[$arg->value]->id;
-    			
-    			$randomvalues = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $attemptid, 'programmedrespvarid', $varid);
+    			$randomvalues = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $attemptid, 'programmedrespvarid', $arg->value);
     			if (!$randomvalues) {
     				print_error('errornorandomvaluesdata', 'qtype_programmedresp');
     			}
@@ -477,14 +489,38 @@ class programmedresp_qtype extends default_questiontype {
     				
     			// Return it as a string to eval()
     			} else {
-    				
-    				$value = 'array(';
-    				foreach ($randomvalues as $randomvalue) {
-    					$arrayvalues[] = $randomvalue;
-    				}
-    				$value.= implode(', ', $arrayvalues);
-    				$value.= ')';
+    				$value = $this->get_function_params_array($randomvalues);
     			}
+    			break;
+    			
+    		case PROGRAMMEDRESP_ARG_CONCAT: 
+    			
+    			$concatdata = unserialize($arg->value);
+    			
+    			// To store the concatenated vars
+    			$concatarray = array();
+
+    			// Getting the random param of each concat var
+    			foreach ($concatdata->values as $varname) {
+    				
+    				// Getting the var id
+    				foreach ($vars as $id => $vardata) {
+    					if ($vardata->varname == $varname) {
+    						$varid = $id;
+    					}
+    				}
+    				if (empty($varid)) {
+    					print_error('errorcantfindvar', 'qtype_programmedresp', $varname);
+    				}
+    				
+    				$randomvalues = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $attemptid, 'programmedrespvarid', $varid);
+	                if (!$randomvalues) {
+	                    print_error('errornorandomvaluesdata', 'qtype_programmedresp');
+	                }
+	                $concatarray = array_merge($concatarray, unserialize($randomvalues));
+    			}
+    			
+    			$value = $this->get_function_params_array($concatarray);
     			break;
     			
     		case PROGRAMMEDRESP_ARG_GUIDEDQUIZ:
@@ -493,6 +529,19 @@ class programmedresp_qtype extends default_questiontype {
     	}
     	
     	return $value;
+    }
+    
+    
+    function get_function_params_array($randomvalues) {
+    	
+        $value = 'array(';
+        foreach ($randomvalues as $randomvalue) {
+            $arrayvalues[] = $randomvalue;
+        }
+        $value.= implode(', ', $arrayvalues);
+        $value.= ')';
+        
+        return $value;
     }
     
     
