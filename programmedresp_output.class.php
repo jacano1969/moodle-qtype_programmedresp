@@ -117,8 +117,21 @@ class programmedresp_output {
         $this->print_form_title('<strong>'.get_string('functionarguments', 'qtype_programmedresp').'</strong>');
         foreach ($functiondata->params as $key => $param) {
 
+        	// Various param types
+        	if (strpos($param->type, '|') != false) {
+        		$paramtypes = explode('|', $param->type);
+        		foreach ($paramtypes as $key => $paramtype) {
+        			$paramtypes[$key] = get_string('paramtype'.$paramtype, 'qtype_programmedresp');
+        		}
+        		$paramsstring = implode(' '.get_string('or','qtype_programmedresp').' ', $paramtypes);
+        		
+        	// Only one param type
+        	} else {
+        	    $paramsstring = get_string("paramtype".$param->type, "qtype_programmedresp");
+        	}
+        	
         	// Argument description
-            $this->print_form_htmlraw('<div class="fitem"><div class="fitemtitle">'.format_text($param->description, FORMAT_MOODLE).' ('.get_string("type", "qtype_programmedresp").': '.get_string("paramtype".$param->type, "qtype_programmedresp").')</div>');
+            $this->print_form_htmlraw('<div class="fitem"><div class="fitemtitle">'.format_text($param->description, FORMAT_MOODLE).' ('.get_string("type", "qtype_programmedresp").': '.$paramsstring.')</div>');
             
             // Argument value type
             $paramelement = '<select name="argtype_'.$key.'" onchange="change_argument_type(this, \''.$key.'\');">';

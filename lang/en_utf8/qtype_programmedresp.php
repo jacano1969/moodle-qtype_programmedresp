@@ -50,6 +50,7 @@ $string['minimum'] = 'Minimum';
 $string['nonumeric'] = '    You must enter a number here';
 $string['novars'] = 'There aren\'t variables in the question text';
 $string['nvalues'] = 'Number of values';
+$string['or'] = 'o';
 $string['paramtypearray'] = 'Vector';
 $string['paramtypefloat'] = 'Rational';
 $string['paramtypeinteger'] = 'Integer';
