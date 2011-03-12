@@ -95,7 +95,7 @@ class functions_tokenizer {
                     }
                 }
                 
-                // Parse return tag to extract return type + return description + number of returned values
+                // Parse return tag to extract return type + number of returned values + return description
                 preg_match('/@return\s+(.*?)\s*(?=$|@[a-z]+\s)/s', $data, $return);
                 if ($return) {
                 	
@@ -125,19 +125,29 @@ class functions_tokenizer {
         // Check integrity
         foreach ($functions as $key => $function) {
         	
+        	// Description
             if (empty($function->description)) {
                 $this->errors[] = get_string('function', 'qtype_programmedresp').' '.$function->name.': '.get_string('errorfunctionnodescription', 'qtype_programmedresp');
                 unset($functions[$key]);
                 continue;
+                
+            // Params
             } else if (empty($function->params)) {
                 $this->errors[] = get_string('function', 'qtype_programmedresp').' '.$function->name.': '.get_string('errorfunctionnoparams', 'qtype_programmedresp');
                 unset($functions[$key]);
                 continue;
+                
+            // Return
             } else if (empty($function->results) || empty($function->nreturns)) {
                 $this->errors[] = get_string('function', 'qtype_programmedresp').' '.$function->name.': '.get_string('errorfunctionnoresults', 'qtype_programmedresp');
                 unset($functions[$key]);
                 continue;
                 
+            } else if (count($function->results) != intval($function->nreturns)) {
+            	$this->errors[] = get_string('function', 'qtype_programmedresp').' '.$function->name.': '.get_string('errorfunctiondifferentnreturns', 'qtype_programmedresp');
+            	unset($functions[$key]);
+            	continue;
+            	
             // TODO: WTF does it happens!
 //            } else if (!$this->check_syntax($function->functioncode)) {
 //            	$this->errors[] = $function->name.': '.get_string('errorfunctionsyntax', 'qtype_programmedresp');
@@ -152,7 +162,7 @@ class functions_tokenizer {
         }
         
         $this->functions = $functions;
-        
+
         return true;
     }
     

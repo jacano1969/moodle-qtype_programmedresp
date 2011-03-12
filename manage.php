@@ -88,6 +88,7 @@ switch ($action) {
 	                $fdata->programmedrespfcatid = $fcatid;
 	                $fdata->name = $function->name;
 	                $fdata->description = $function->description;
+	                $fdata->nreturns = $function->nreturns;
 	                $fdata->params = serialize($function->params);
 	                $fdata->results = serialize($function->results);
 	                $fdata->timeadded = time();

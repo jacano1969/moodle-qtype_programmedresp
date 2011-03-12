@@ -26,6 +26,7 @@ $string['errorcantfindvar'] = 'The variable $a can not be found';
 $string['errordb'] = 'DB error';
 $string['erroreditformnotcompleted'] = 'Incomplete question, check the variables and the assigned function';
 $string['errorfunctionalreadycreated'] = 'Function already created';
+$string['errorfunctiondifferentnreturns'] = 'S\'ha d\'especificar una descripció per cada valor retornat (per exemple: @return array 2 Desc1 | Desc2)';
 $string['errorfunctionnodescription'] = 'Wrong function description';
 $string['errorfunctionnoparams'] = 'Wrong function params';
 $string['errorfunctionnoresults'] = 'Wrong function return';

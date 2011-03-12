@@ -26,6 +26,7 @@ $string['errorcantfindvar'] = 'No es pot trobar la variable $a';
 $string['errordb'] = 'Error de base de dades';
 $string['erroreditformnotcompleted'] = 'Pregunta incompleta, revisa les variables i la funció assignada';
 $string['errorfunctionalreadycreated'] = 'Funció ja creada';
+$string['errorfunctiondifferentnreturns'] = 'There should be a description for each returned value (for example: @return array 2 Desc1 | Desc2)';
 $string['errorfunctionnodescription'] = 'Descripció de la funció errònia';
 $string['errorfunctionnoparams'] = 'Paràmetres de la funció erronis';
 $string['errorfunctionnoresults'] = 'Return de la funció erroni';
