@@ -234,6 +234,11 @@ function update_addfunctionurl() {
 	var categoryelement = document.getElementById("id_functioncategory");
 	var functionelement = document.getElementById("id_addfunctionurl");
 	
+	// If there is no function edition capability
+	if (!functionelement) {
+		return true;
+	}
+	
 	// Add the index
 	var fcatidindex = functionelement.href.indexOf("&fcatid", 0);
 	if (fcatidindex == -1) {
