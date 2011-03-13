@@ -554,19 +554,19 @@ class programmedresp_qtype extends default_questiontype {
      * @return boolean
      */
     function test_programmed_response($result, $response, $programmedresp) {
-    	
-    	if ($result == $response) {
+
+    	if (strval($result) == strval($response)) {
     	   return 1;
     	}
     	
     	// Tolerance nominal
     	if ($programmedresp->tolerancetype == PROGRAMMEDRESP_TOLERANCE_NOMINAL) {
-    		if (($response - $programmedresp->tolerance) <= $result && ($response + $programmedresp->tolerance) >= $result) {
+    		if (floatval($response - $programmedresp->tolerance) <= floatval($result) && floatval($response + $programmedresp->tolerance) >= floatval($result)) {
     		    return 1;
     		}
     		
     	// Tolerance relative
-    	} else if ($response * (1 - $programmedresp->tolerance) < $result && $response * (1 + $programmedresp->tolerance) > $result) {
+    	} else if (floatval($response * (1 - $programmedresp->tolerance)) < floatval($result) && floatval($response * (1 + $programmedresp->tolerance)) > floatval($result)) {
     		return 1;
     	}
     	
@@ -636,6 +636,7 @@ class programmedresp_qtype extends default_questiontype {
         if (!is_array($results)) {
         	$results = array($results);
         }
+        
         return $results;
     }
 
