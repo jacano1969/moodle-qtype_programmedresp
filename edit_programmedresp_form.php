@@ -57,7 +57,15 @@ class question_edit_programmedresp_form extends question_edit_form {
         // Form elements
         $outputmanager = new programmedresp_output($mform);
 
-        $varsattrs = array('onclick' => 'return display_vars(this, "'.get_string("novars", "qtype_programmedresp").'");');
+        // In a new question the vars div should be loaded
+        if (empty($this->question->id)) {
+            $varsattrs = array('onclick' => 'return display_vars(this, "'.get_string("novars", "qtype_programmedresp").'");');
+            
+        // In an edition the args also should be updated
+        } else {
+        	$displayargsjs = 'var argscaller = document.getElementById("id_programmedrespfid");return display_args(argscaller);';
+        	$varsattrs = array('onclick' => 'display_vars(this, "'.get_string("novars", "qtype_programmedresp").'");'.$displayargsjs);
+        }
         $mform->addElement('button', 'vars', get_string('assignvarsvalues', 'qtype_programmedresp'), $varsattrs);
         
     	// Link to fill vars data
