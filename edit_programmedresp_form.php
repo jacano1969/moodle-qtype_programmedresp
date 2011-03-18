@@ -43,7 +43,7 @@ class question_edit_programmedresp_form extends question_edit_form {
     		if (empty($catoptions[$cat->id])) {
     			$catoptions[$cat->id] = $cat->name;
                 unset($categories[$key]);
-                $this->add_child_categories($cat->id, $catoptions, $categories);
+                programmedresp_add_child_categories($cat->id, $catoptions, $categories);
     		}
     	}
 
@@ -184,31 +184,6 @@ class question_edit_programmedresp_form extends question_edit_form {
         parent::set_data($question);
     }
 
-    
-    /**
-     * @todo Improve!!!
-     * @param unknown_type $parentid
-     * @param unknown_type $catoptions
-     * @param unknown_type $categories
-     * @param unknown_type $nspaces
-     */
-    function add_child_categories($parentid, &$catoptions, $categories, $nspaces = 2) {
-    	
-    	foreach ($categories as $key => $cat) {
-    		if ($cat->parent == $parentid && empty($catoptions[$cat->id])) {
-    			
-    			$spaces = '';
-    			$i = 0;
-    			while ($i < $nspaces) {
-    				$spaces.= '&nbsp;';
-    				$i++;
-    			}
-    			$catoptions[$cat->id] = $spaces.$cat->name;
-    			unset($categories[$key]);
-    			$this->add_child_categories($cat->id, $catoptions, $categories, $nspaces + 2);
-    		}
-    	}
-    }
     
     function validation($data) {
         $errors = array();

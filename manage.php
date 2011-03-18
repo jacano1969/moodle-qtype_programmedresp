@@ -26,15 +26,17 @@ switch ($action) {
 	
 	case 'addcategory':
 		
-		$cats = get_records('question_programmedresp_fcat', '', '', 'id ASC', 'id, name');
-		$categories[0] = get_string('root', 'qtype_programmedresp');
-		if ($cats) {
-			foreach ($cats as $cat) {
-				$categories[$cat->id] = $cat->name;
-			}
-		}
+		$categories = get_records('question_programmedresp_fcat', '', '', 'id ASC', 'id, parent, name');
+		$catoptions[0] = get_string('root', 'qtype_programmedresp');
+        foreach ($categories as $key => $cat) {
+            if (empty($catoptions[$cat->id])) {
+                $catoptions[$cat->id] = $cat->name;
+                unset($categories[$key]);
+                programmedresp_add_child_categories($cat->id, $catoptions, $categories);
+            }
+        }
 		
-		$form = new programmedresp_addcategory_form($CFG->wwwroot.'/question/type/programmedresp/manage.php', array('categories' => $categories));
+		$form = new programmedresp_addcategory_form($CFG->wwwroot.'/question/type/programmedresp/manage.php', array('categories' => $catoptions));
 		
 		// Insert category
 		if ($data = $form->get_data()) {
@@ -81,7 +83,7 @@ switch ($action) {
             } else {
 	            
 	            foreach ($functions as $function) {
-	            	if (get_record('question_programmedresp_f', 'name', $function->name) || get_function_code($function->name)) {
+	            	if (get_record('question_programmedresp_f', 'name', $function->name) || programmedresp_get_function_code($function->name)) {
 	            		notify($function->name.': '.get_string('errorfunctionalreadycreated', 'qtype_programmedresp'), 'error');
 	            		continue;
 	            	}

@@ -159,11 +159,37 @@ function programmedresp_add_repository_function($functioncode) {
 
 
 /**
+ * @todo Improve!!!
+ * @param unknown_type $parentid
+ * @param unknown_type $catoptions
+ * @param unknown_type $categories
+ * @param unknown_type $nspaces
+*/
+function programmedresp_add_child_categories($parentid, &$catoptions, $categories, $nspaces = 2) {
+        
+    foreach ($categories as $key => $cat) {
+        if ($cat->parent == $parentid && empty($catoptions[$cat->id])) {
+
+            $spaces = '';
+            $i = 0;
+            while ($i < $nspaces) {
+                $spaces.= '&nbsp;';
+                $i++;
+            }
+            $catoptions[$cat->id] = $spaces.$cat->name;
+            unset($categories[$key]);
+            programmedresp_add_child_categories($cat->id, $catoptions, $categories, $nspaces + 2);
+        }
+    }
+}
+    
+    
+/**
  * Returns the function code
  * @param object $function programmedresp_f
  * @return string
  */
-function get_function_code($functionname) {
+function programmedresp_get_function_code($functionname) {
     global $CFG;
        
     $fh = fopen($CFG->dataroot.'/qtype_programmedresp.php', 'r');
