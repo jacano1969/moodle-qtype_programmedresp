@@ -48,7 +48,7 @@ switch ($action) {
 			}
 			
 			echo '<script type="text/javascript">';
-			echo 'add_to_parent("'.$catdata->id.'", "'.$catdata->name.'", "id_functioncategory");window.close();';
+			echo 'add_to_parent("'.$catdata->id.'", "'.$catdata->name.'", "id_functioncategory", "'.$data->parent.'");window.close();';
 			echo '</script>';
 			
 	    // Display form
