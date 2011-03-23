@@ -350,7 +350,7 @@ class programmedresp_qtype extends default_questiontype {
         		}
         		$values = $programmedrespval->varvalues;
         	}
-        	$values = unserialize($values);
+        	$values = programmedresp_unserialize($values);
         	
             $valuetodisplay = implode(', ', $values);
 	        
@@ -481,7 +481,7 @@ class programmedresp_qtype extends default_questiontype {
     			if (!$randomvalues) {
     				print_error('errornorandomvaluesdata', 'qtype_programmedresp');
     			}
-    			$randomvalues = unserialize($randomvalues);
+    			$randomvalues = programmedresp_unserialize($randomvalues);
     			
     			// If 1 is the array size the param type is an integer|float
     			if (count($randomvalues) == 1) {
@@ -495,7 +495,7 @@ class programmedresp_qtype extends default_questiontype {
     			
     		case PROGRAMMEDRESP_ARG_CONCAT: 
     			
-    			$concatdata = unserialize($arg->value);
+    			$concatdata = programmedresp_unserialize($arg->value);
     			
     			// To store the concatenated vars
     			$concatarray = array();
@@ -517,7 +517,7 @@ class programmedresp_qtype extends default_questiontype {
 	                if (!$randomvalues) {
 	                    print_error('errornorandomvaluesdata', 'qtype_programmedresp');
 	                }
-	                $concatarray = array_merge($concatarray, unserialize($randomvalues));
+	                $concatarray = array_merge($concatarray, programmedresp_unserialize($randomvalues));
     			}
     			
     			$value = $this->get_function_params_array($concatarray);

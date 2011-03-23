@@ -63,7 +63,7 @@ function programmedresp_get_concat_vars($args = false) {
 		foreach ($args as $arg) {
 			
 			if (PROGRAMMEDRESP_ARG_CONCAT == $arg->type) {
-				$concatdata = unserialize($arg->value);
+				$concatdata = programmedresp_unserialize($arg->value);
 				$concatvars[$concatdata->name] = $concatdata->name;
 			}
 		}
@@ -218,3 +218,50 @@ function programmedresp_get_function_code($functionname) {
     return $code;
 }
 
+
+function programmedresp_serialize($var) {
+	
+	// Single value
+	if (!is_object($var) && !is_array($var)) {
+		return serialize(str_replace('"', '\"', $var));
+	}
+	
+	if (is_object($var)) {
+		foreach ($var as $attr => $value) {
+			$var->$attr = str_replace('"', '\"', $value);
+		}
+	}
+	
+	if (is_array($var)) {
+		foreach ($var as $key => $value) {
+			$var[$key] = str_replace('"', '\"', $value);
+		}
+	}
+	
+	return $var;
+}
+
+
+function programmedresp_unserialize($var) {
+	
+	$var = unserialize($var);
+	
+	if (!is_object($var) && !is_array($var)) {
+		return str_replace('\"', '"', $var);
+	}
+	
+
+    if (is_object($var)) {
+        foreach ($var as $attr => $value) {
+            $var->$attr = str_replace('\"', '"', $value);
+        }
+    }
+    
+    if (is_array($var)) {
+        foreach ($var as $key => $value) {
+            $var[$key] = str_replace('\"', '"', $value);
+        }
+    }
+    
+	return $var;
+}

@@ -63,9 +63,13 @@ switch ($action) {
 		$fcatid = required_param('fcatid', PARAM_INT);
 		$form = new programmedresp_addfunctions_form($CFG->wwwroot.'/question/type/programmedresp/manage.php', array('fcatid' => $fcatid));
         
-        // Insert category
-        if ($data = $form->get_data()) {
+        if ($form->is_cancelled()) {
+        	echo '<script type="text/javascript">window.close();</script>';
+        	
+        }else if ($data = $form->get_data()) {
             
+        	$data->functionstextarea = stripslashes($data->functionstextarea);
+        	
             $tokenizer = new functions_tokenizer();
             if (!$tokenizer->set_code($data->functionstextarea)) {
             	notify(get_string('errorsyntax', 'qtype_programmedresp'), 'error');
@@ -91,8 +95,8 @@ switch ($action) {
 	                $fdata->name = $function->name;
 	                $fdata->description = $function->description;
 	                $fdata->nreturns = $function->nreturns;
-	                $fdata->params = serialize($function->params);
-	                $fdata->results = serialize($function->results);
+	                $fdata->params = programmedresp_serialize($function->params);
+	                $fdata->results = programmedresp_serialize($function->results);
 	                $fdata->timeadded = time();
 
 	                if (!$fdata->id = insert_record('question_programmedresp_f', $fdata)) {

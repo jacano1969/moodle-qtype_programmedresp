@@ -46,7 +46,7 @@ class programmedresp_output {
         if ($args) {
         	foreach ($args as $arg) {
         		if (PROGRAMMEDRESP_ARG_CONCAT == $arg->type) {
-        			$concatdata = unserialize($arg->value);
+        			$concatdata = programmedresp_unserialize($arg->value);
         			$concatdiv.= '<strong>'.$concatdata->name.'</strong><br/>';
                     $concatdiv.= '<select id="'.$concatdata->name.'" name="'.$concatdata->name.'" multiple="multiple">';
                     
@@ -121,8 +121,8 @@ class programmedresp_output {
         
         // Function data
         $functiondata = get_record('question_programmedresp_f', 'id', $functionid);
-        $functiondata->params = unserialize($functiondata->params);
-        $functiondata->results = unserialize($functiondata->results);
+        $functiondata->params = programmedresp_unserialize($functiondata->params);
+        $functiondata->results = programmedresp_unserialize($functiondata->results);
 
         if (!is_array($functiondata->params) || !is_array($functiondata->results)) {
         	$this->print_form_htmlraw('<span class="error">'.get_string('errorparsingfunctiondata', 'qtype_programmedresp').'</span>');
@@ -198,7 +198,7 @@ class programmedresp_output {
 	            	$variableclass = '';
 	            	
 	            } else if ($args[$key]->type == PROGRAMMEDRESP_ARG_CONCAT) {
-	            	$concatdata = unserialize($args[$key]->value);
+	            	$concatdata = programmedresp_unserialize($args[$key]->value);
 	            	$concatvalue = $concatdata->name;
 	            	$concatclass = '';
 	            	
