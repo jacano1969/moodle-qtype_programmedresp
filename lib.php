@@ -238,6 +238,8 @@ function programmedresp_serialize($var) {
 		}
 	}
 	
+	$var = serialize($var);
+	
 	return $var;
 }
 

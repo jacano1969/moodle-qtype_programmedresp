@@ -255,7 +255,7 @@ class programmedresp_output {
         for ($i = 0; $i < $functiondata->nreturns; $i++) {
             
             if (!empty($functiondata->results[$i])) {
-                $value = $functiondata->results[$i];
+                $value = str_replace('"', '&quot;', $functiondata->results[$i]);
             } else {
                 $value = '';
             }
