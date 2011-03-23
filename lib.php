@@ -234,7 +234,13 @@ function programmedresp_serialize($var) {
 	
 	if (is_array($var)) {
 		foreach ($var as $key => $value) {
-			$var[$key] = str_replace('"', '\"', $value);
+			if (!is_object($value)) {
+			    $var[$key] = str_replace('"', '\"', $value);
+			} else {
+				foreach ($value as $attr => $attrvalue) {
+					$var[$key]->$attr = str_replace('"', '\"', $attrvalue);
+				}
+			}
 		}
 	}
 	

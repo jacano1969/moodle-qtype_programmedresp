@@ -95,8 +95,8 @@ switch ($action) {
 	                $fdata->name = $function->name;
 	                $fdata->description = $function->description;
 	                $fdata->nreturns = $function->nreturns;
-	                $fdata->params = programmedresp_serialize($function->params);
-	                $fdata->results = programmedresp_serialize($function->results);
+	                $fdata->params = addslashes(programmedresp_serialize($function->params));
+	                $fdata->results = addslashes(programmedresp_serialize($function->results));
 	                $fdata->timeadded = time();
 
 	                if (!$fdata->id = insert_record('question_programmedresp_f', $fdata)) {
