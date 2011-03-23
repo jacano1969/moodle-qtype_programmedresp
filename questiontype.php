@@ -558,7 +558,14 @@ class programmedresp_qtype extends default_questiontype {
     	if (strval($result) == strval($response)) {
     	   return 1;
     	}
-    	
+
+    	// For infinite values
+        if (!is_integer($response) && !is_float($response)) {
+        	
+        	// It has been previoulsy tested strval() vs strval()
+        	return 0;
+        }
+        
     	// Tolerance nominal
     	if ($programmedresp->tolerancetype == PROGRAMMEDRESP_TOLERANCE_NOMINAL) {
     		if (floatval($response - $programmedresp->tolerance) <= floatval($result) && floatval($response + $programmedresp->tolerance) >= floatval($result)) {
