@@ -245,7 +245,7 @@ class programmedresp_qtype extends default_questiontype {
         		$concatobj = new stdClass();
         		$concatobj->name = 'concatvar_'.$concatnum;
         		$concatobj->values = $concatvalues;
-        		$arg->value = serialize($concatobj);
+        		$arg->value = programmedresp_serialize($concatobj);
         	}
         	
         	// Update
@@ -344,7 +344,7 @@ class programmedresp_qtype extends default_questiontype {
                 // Add a new random value
         		$programmedrespval->attemptid = $state->attempt;
         		$programmedrespval->programmedrespvarid = $var->id;
-        		$programmedrespval->varvalues = serialize($this->get_random_value($var));
+        		$programmedrespval->varvalues = programmedresp_serialize($this->get_random_value($var));
         		if (!insert_record('question_programmedresp_val', $programmedrespval)) {
         			print_error('errordb', 'qtype_programmedresp');
         		}
