@@ -38,7 +38,7 @@ class question_edit_programmedresp_form extends question_edit_form {
     		$this->programmedresp_resps = get_records('question_programmedresp_resp', 'programmedrespid', $this->programmedresp->id, '', 'returnkey, label');
     	}
     	
-    	$catoptions = array(0 => ' ('.get_string('selectcategory', 'qtype_programmedresp').') ');
+    	$catoptions = array(0 => '&nbsp;('.get_string('selectcategory', 'qtype_programmedresp').')&nbsp;');
     	foreach ($categories as $key => $cat) {
     		if (empty($catoptions[$cat->id])) {
     			$catoptions[$cat->id] = $cat->name;

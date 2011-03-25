@@ -243,6 +243,10 @@ function add_to_parent(id, name, openerelementid, afterkey) {
         return true;
     }
     
+    // Store an identation char
+	// The dirties hack I've ever seen
+	var rootidentchar = openerselect.options[0].text.substr(0, 1);
+    
     // After the parent option
     for (var i = 0; i < openerselect.options.length; i++) {
         
@@ -251,8 +255,19 @@ function add_to_parent(id, name, openerelementid, afterkey) {
             
             // Getting and adding to the new option the parent identation
             var identations = '';
-            while (openerselect.options[i].text.indexOf(identations) != -1) {
-                identations = identations + openerselect.options[i].text.substr(0, 2);
+            
+            // If his parent is the root nothing
+            if (afterkey == 0) {
+            	
+            // If it's a root child two
+            } else if (openerselect.options[i].text[0] != rootidentchar) {
+            	identations = rootidentchar + rootidentchar;
+            	
+            // Any other case iterate
+            } else {
+	            while (openerselect.options[i].text.indexOf(identations) != -1) {
+	                identations = identations + openerselect.options[i].text.substr(0, 2);
+	            }
             }
             newoption.text = identations + newoption.text;
             
