@@ -2,6 +2,7 @@
 var callbackResult = false;
 var callerelement = false;
 var concatnum = 0;
+var editing = false;
 
 function get_questiontext() {
     
@@ -28,10 +29,14 @@ function get_questiontext() {
     return questiontextvalue;
 }
 
-function display_vars(element, novarsstring) {
+function display_vars(element, novarsstring, edit) {
 
     callerelement = element;
 
+    if (edit != undefined) {
+    	editing = edit;
+    }
+    
     var varsheader = document.getElementById("varsheader");
     varsheader.style.visibility = "visible";
     varsheader.style.display = "inline";
@@ -47,7 +52,7 @@ function display_vars(element, novarsstring) {
     }
 
     
-    return display_section("action=displayvars&questiontext=" + questiontextvalue);
+    display_section("action=displayvars&questiontext=" + questiontextvalue);
 }
 
 function functionsection_visible() {
@@ -121,12 +126,19 @@ function display_section(params) {
 }
 
 function process_display_section(transaction) {
-    
+
     var contentdiv = document.getElementById(callerelement.id + "_content");
     contentdiv.innerHTML = transaction.responseText;
     
     callbackResult = false;
     callerelement = false;
+    
+    // The editing param will only be true when calling display_vars on edition
+    if (editing != false) {
+    	var argscaller = document.getElementById("id_programmedrespfid");
+    	display_args(argscaller);
+    	editing = false;
+    }
 }
 
 function failure_display_section() {    callbackResult = false;}
