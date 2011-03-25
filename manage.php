@@ -93,7 +93,7 @@ switch ($action) {
 	            	}
 	                $fdata->programmedrespfcatid = $fcatid;
 	                $fdata->name = $function->name;
-	                $fdata->description = $function->description;
+	                $fdata->description = addslashes($function->description);
 	                $fdata->nreturns = $function->nreturns;
 	                $fdata->params = addslashes(programmedresp_serialize($function->params));
 	                $fdata->results = addslashes(programmedresp_serialize($function->results));
