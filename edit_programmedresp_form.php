@@ -106,6 +106,12 @@ class question_edit_programmedresp_form extends question_edit_form {
         // Link to add a function
         if ($caneditfunctions) {
 	        $addfunctionsurl = $CFG->wwwroot.'/question/type/programmedresp/manage.php?action=addfunctions';
+	        
+	        // If it's a function edition we should add the selected category id
+	        if (!empty($this->question->id)) {
+	        	$addfunctionsurl .= '&fcatid='.$this->programmedresp_f->programmedrespfcatid;
+	        }
+	        
 	        $onclick = "window.open(this.href, this.target, 'menubar=0,location=0,scrollbars,resizable,width=650,height=600', true);return false;";
 	        $functionlink = '<a href="'.$addfunctionsurl.'" onclick="'.$onclick.'" target="addfunctions" id="id_addfunctionurl">'.get_string('addfunction', 'qtype_programmedresp').'</a>';
 	        $mform->addElement('html', '<div class="fitem"><div class="fitemtitle"></div><div class="felement">'.$functionlink.'<br/><br/></div></div>');
