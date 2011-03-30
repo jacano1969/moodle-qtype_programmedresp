@@ -55,7 +55,7 @@ class programmedresp_qtype extends default_questiontype {
         }
         $question->options->vars = get_records('question_programmedresp_var', 'programmedrespid', $question->options->programmedresp->id);
         $question->options->args = get_records('question_programmedresp_arg', 'programmedrespid', $question->options->programmedresp->id);
-        $question->options->resps = get_records('question_programmedresp_resp', 'programmedrespid', $question->options->programmedresp->id, '', 'returnkey, label');
+        $question->options->resps = get_records('question_programmedresp_resp', 'programmedrespid', $question->options->programmedresp->id, 'returnkey ASC', 'returnkey, label');
         
         $question->options->function = get_record('question_programmedresp_f', 'id', $question->options->programmedresp->programmedrespfid);
         if (!$question->options->function) {
