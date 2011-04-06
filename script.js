@@ -285,16 +285,25 @@ function add_to_parent(id, name, openerelementid, afterkey) {
             // Selecting the new option
             openerselect.selectedIndex = (i + 1);
             
+            update_addfunctionurl(true);
+            
             return true;
         }
     }
 }
 
 
-function update_addfunctionurl() {
+function update_addfunctionurl(opener) {
     
-    var categoryelement = document.getElementById("id_functioncategory");
-    var functionelement = document.getElementById("id_addfunctionurl");
+	if (opener != undefined) {
+		var categoryelement = window.opener.document.getElementById("id_functioncategory");
+	    var functionelement = window.opener.document.getElementById("id_addfunctionurl");
+	} else {
+		var categoryelement = document.getElementById("id_functioncategory");
+	    var functionelement = document.getElementById("id_addfunctionurl");
+	}
+	
+    
     
     // If there is no function edition capability
     if (!functionelement) {
