@@ -472,7 +472,12 @@ class programmedresp_qtype extends default_questiontype {
     	switch ($arg->type) {
     		
     		case PROGRAMMEDRESP_ARG_FIXED:
+    			
     			$value = $arg->value;
+    			if (strstr($value, ',') != false) {
+    				$value = $this->get_function_params_array(explode(',', $value));
+    			}
+    			
     			break;
     			
     		case PROGRAMMEDRESP_ARG_VARIABLE:
@@ -643,7 +648,7 @@ class programmedresp_qtype extends default_questiontype {
         if (!is_array($results)) {
         	$results = array($results);
         }
-        
+
         return $results;
     }
 
