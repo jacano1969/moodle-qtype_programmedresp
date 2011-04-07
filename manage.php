@@ -18,7 +18,9 @@ require_once($CFG->dirroot.'/question/type/programmedresp/lib.php');
 $action = required_param('action', PARAM_ALPHA);
 require_capability('moodle/question:config', get_context_instance(CONTEXT_SYSTEM));
 
+require_js(array('yui_yahoo', 'yui_event', 'yui_connection'));        
 require_js($CFG->wwwroot.'/question/type/programmedresp/script.js');
+
 print_header_simple(get_string($action, 'qtype_programmedresp'));
 
 
@@ -48,7 +50,14 @@ switch ($action) {
 			}
 			
 			echo '<script type="text/javascript">';
-			echo 'add_to_parent("'.$catdata->id.'", "'.$catdata->name.'", "id_functioncategory", "'.$data->parent.'");window.close();';
+			echo 'add_to_parent("'.$catdata->id.'", "'.$catdata->name.'", "id_functioncategory", "'.$data->parent.'");';
+            echo 'opened = true;'; // We work with the opener window
+            echo 'wwwroot = "'.$CFG->wwwroot.'";'; // Notify the path
+			echo 'var categorieselement = window.opener.document.getElementById("id_functioncategory");';
+			echo 'display_functionslist(categorieselement);';
+			echo 'update_addfunctionurl();';
+			echo 'wwwroot = false;';  // Restore the default value
+			//echo 'window.close();';
 			echo '</script>';
 			
 	    // Display form
