@@ -3,6 +3,8 @@ var callbackResult = false;
 var callerelement = false;
 var concatnum = 0;
 var editing = false;
+var opened = false;
+var wwwroot = false;
 
 function get_questiontext() {
     
@@ -34,7 +36,7 @@ function display_vars(element, novarsstring, edit) {
     callerelement = element;
 
     if (edit != undefined) {
-    	editing = edit;
+        editing = edit;
     }
     
     var varsheader = document.getElementById("varsheader");
@@ -68,12 +70,18 @@ function display_functionslist(element) {
     
     callerelement = element;
     
+    if (opened == true) {
+        var functiondiv = window.opener.document.getElementById("id_programmedrespfid_content");
+        var category = window.opener.document.getElementById("id_functioncategory");
+    } else {
+        var functiondiv = document.getElementById("id_programmedrespfid_content");
+        var category = document.getElementById("id_functioncategory");
+    }
+    
     // Hide function data until a new function selection
-    var functiondiv = document.getElementById("id_programmedrespfid_content");
     functiondiv.style.visibility = "hidden";
     functiondiv.style.display = "none";
     
-    var category = document.getElementById("id_functioncategory");
     return display_section("action=displayfunctionslist&categoryid=" + category.value);
 }
 
@@ -93,9 +101,11 @@ function display_args(element) {
     for (var i = 0; i < concatnum; i++) {
 
         var concatelement = document.getElementById("concatvar_" + i);
-        for (var elementi = 0; elementi < concatelement.options.length; elementi++) {
-            if (concatelement.options[elementi].selected) {
-                concatstring += "&concatvar_" + i + "[]=" + concatelement.options[elementi].value;
+        if (concatelement != false) {
+            for (var elementi = 0; elementi < concatelement.options.length; elementi++) {
+                if (concatelement.options[elementi].selected) {
+                    concatstring += "&concatvar_" + i + "[]=" + concatelement.options[elementi].value;
+                }
             }
         }
     }
@@ -107,7 +117,11 @@ function display_args(element) {
 
 function display_section(params) {
     
-    var contentdiv = document.getElementById(callerelement.id + "_content");
+    if (opened == true) {
+        var contentdiv = window.opener.document.getElementById(callerelement.id + "_content");
+    } else {
+        var contentdiv = document.getElementById(callerelement.id + "_content");
+    }
     contentdiv.innerHTML = "";
     
     // TODO: Posar-li un loading.gif
@@ -120,14 +134,22 @@ function display_section(params) {
           timeout: 50000
     };
 
-    YAHOO.util.Connect.asyncRequest("POST", "type/programmedresp/contents.php", callbackHandler, params);
+    var prefix = '';
+    if (wwwroot != false) {
+        prefix = wwwroot + "/question/";
+    }
+    YAHOO.util.Connect.asyncRequest("POST", prefix + "type/programmedresp/contents.php", callbackHandler, params);
     
     return callbackResult;
 }
 
 function process_display_section(transaction) {
 
-    var contentdiv = document.getElementById(callerelement.id + "_content");
+    if (opened == true) {
+        var contentdiv = window.opener.document.getElementById(callerelement.id + "_content");
+    } else {
+        var contentdiv = document.getElementById(callerelement.id + "_content");
+    }
     contentdiv.innerHTML = transaction.responseText;
     
     callbackResult = false;
@@ -135,9 +157,13 @@ function process_display_section(transaction) {
     
     // The editing param will only be true when calling display_vars on edition
     if (editing != false) {
-    	var argscaller = document.getElementById("id_programmedrespfid");
-    	display_args(argscaller);
-    	editing = false;
+        if (opened == true) {
+            var argscaller = window.opener.document.getElementById("id_programmedrespfid");
+        } else {
+            var argscaller = document.getElementById("id_programmedrespfid");
+        }
+        display_args(argscaller);
+        editing = false;
     }
 }
 
@@ -244,8 +270,8 @@ function add_to_parent(id, name, openerelementid, afterkey) {
     }
     
     // Store an identation char
-	// The dirties hack I've ever seen
-	var rootidentchar = openerselect.options[0].text.substr(0, 1);
+    // The dirties hack I've ever seen
+    var rootidentchar = openerselect.options[0].text.substr(0, 1);
     
     // After the parent option
     for (var i = 0; i < openerselect.options.length; i++) {
@@ -258,16 +284,16 @@ function add_to_parent(id, name, openerelementid, afterkey) {
             
             // If his parent is the root nothing
             if (afterkey == 0) {
-            	
+                
             // If it's a root child two
             } else if (openerselect.options[i].text[0] != rootidentchar) {
-            	identations = rootidentchar + rootidentchar;
-            	
+                identations = rootidentchar + rootidentchar;
+                
             // Any other case iterate
             } else {
-	            while (openerselect.options[i].text.indexOf(identations) != -1) {
-	                identations = identations + openerselect.options[i].text.substr(0, 2);
-	            }
+                while (openerselect.options[i].text.indexOf(identations) != -1) {
+                    identations = identations + openerselect.options[i].text.substr(0, 2);
+                }
             }
             newoption.text = identations + newoption.text;
             
@@ -285,25 +311,21 @@ function add_to_parent(id, name, openerelementid, afterkey) {
             // Selecting the new option
             openerselect.selectedIndex = (i + 1);
             
-            update_addfunctionurl(true);
-            
             return true;
         }
     }
 }
 
 
-function update_addfunctionurl(opener) {
+function update_addfunctionurl() {
     
-	if (opener != undefined) {
-		var categoryelement = window.opener.document.getElementById("id_functioncategory");
-	    var functionelement = window.opener.document.getElementById("id_addfunctionurl");
-	} else {
-		var categoryelement = document.getElementById("id_functioncategory");
-	    var functionelement = document.getElementById("id_addfunctionurl");
-	}
-	
-    
+    if (opened == true) {
+        var categoryelement = window.opener.document.getElementById("id_functioncategory");
+        var functionelement = window.opener.document.getElementById("id_addfunctionurl");
+    } else {
+        var categoryelement = document.getElementById("id_functioncategory");
+        var functionelement = document.getElementById("id_addfunctionurl");
+    }
     
     // If there is no function edition capability
     if (!functionelement) {
