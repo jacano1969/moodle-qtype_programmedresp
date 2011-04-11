@@ -67,9 +67,9 @@ class question_edit_programmedresp_form extends question_edit_form {
         
         // Button label
         if (!empty($this->question->id)) {
-            $buttonlabel = get_string('assignvarsvalues', 'qtype_programmedresp');
+            $buttonlabel = get_string('refreshvarsvalues', 'qtype_programmedresp');
         } else {
-        	$buttonlabel = get_string('refreshvarsvalues', 'qtype_programmedresp');
+        	$buttonlabel = get_string('assignvarsvalues', 'qtype_programmedresp');
         }
         $varsattrs = array('onclick' => 'display_vars(this, "'.get_string("novars", "qtype_programmedresp").'", '.$editingjsparam.');');
         $mform->addElement('button', 'vars', $buttonlabel, $varsattrs);
