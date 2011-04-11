@@ -1,7 +1,8 @@
 
 var callbackResult = false;
 var callerelement = false;
-var concatnum = 0;
+var maxconcatnum = 50;
+var varmatchpattern = /\{\$[a-zA-Z0-9]*\}/g;
 var editing = false;
 var opened = false;
 var wwwroot = false;
@@ -23,12 +24,23 @@ function get_questiontext() {
         return false;
     }
     
-    var pattern = /\{\$[a-zA-Z0-9]*\}/g;
-    if (questiontextvalue.match(pattern) == null) {
+    if (questiontextvalue.match(varmatchpattern) == null) {
         return false;
     }
     
     return questiontextvalue;
+}
+
+function get_next_concat_num() {
+	
+	for (var i = 0; i < maxconcatnum; i++) {
+		var tmpconcat = document.getElementById("concatvar_" + i);
+		if (!tmpconcat) {
+			return i;
+		}
+	}
+	
+	return maxconcatnum;
 }
 
 function display_vars(element, novarsstring, edit) {
@@ -70,8 +82,6 @@ function functionsection_visible() {
     // If there is a selected function reload the function arguments
     } else if (fakecaller) {
     	display_args(fakecaller);
-    } else {
-    	alert('ni un ni laltre');
     }
     
     return false;
@@ -109,6 +119,7 @@ function display_args(element) {
     
     // Concatenated vars
     var concatstring = "";
+    var concatnum = get_next_concat_num();
     for (var i = 0; i < concatnum; i++) {
 
         var concatelement = document.getElementById("concatvar_" + i);
@@ -202,34 +213,76 @@ function display_responselabels() {
 
 function add_concat_var() {
     
-    var maindiv = document.getElementById("id_concatvars");
+    // The element number to add
+    var concatnum = get_next_concat_num();
     
-    // HTML to add
-    var html = '<strong>concatvar_' + concatnum + '</strong><br/>';
-    html += '<select id="concatvar_' + concatnum + '" name="concatvar_' + concatnum + '[]" multiple="multiple">';
+    // The questiontext vars
+    var varsstring = '';
+    var vars = get_questiontext_vars();
+    for (var vari = 0; vari < vars.length; vari++) {
+        varsstring += "&vars[]=" + vars[vari];
+    }
     
-    // Getting var names
+    // Responses manager
+    var callbackHandler = 
+    {
+          success: process_add_concat_var,
+          failure: failure_add_concat_var,
+          timeout: 50000
+    };
+    
+    var params = "action=addconcatvar&concatnum=" + concatnum + varsstring;
+    YAHOO.util.Connect.asyncRequest("POST", "type/programmedresp/contents.php", callbackHandler, params);
+    
+    return callbackResult;
+}
+
+function process_add_concat_var(transaction) {
+	
+	var maindiv = document.getElementById("id_concatvars");
+    var vardiv = document.createElement("div");
+    
+    vardiv.innerHTML = transaction.responseText;
+    maindiv.appendChild(vardiv);
+}
+
+function failure_add_concat_var() {
+	
+}
+
+function get_questiontext_vars() {
+
     var questiontextvalue = get_questiontext();
     
-    var pattern = /\{\$[a-zA-Z0-9]*\}/g;
-    var matches = questiontextvalue.match(pattern);
+    var matches = questiontextvalue.match(varmatchpattern);
     if (matches == null) {
         return false;
     }
+    
+    var returnarray = new Array();
     for (var i = 0; i < matches.length; i++) {
-        var matchstr = matches[i].substr(2, (matches[i].length - 3));
-        html += '<option value="' + matchstr + '">' + matchstr + '</option>';
+    	returnarray.push(matches[i].substr(2, (matches[i].length - 3)));
     }
     
-    html += '</select><br/><br/>';
-    
-    var vardiv = document.createElement("div");
-    vardiv.innerHTML = html;
-    
-    maindiv.appendChild(vardiv);
-    concatnum = concatnum + 1;
+    return returnarray;
 }
 
+function confirm_concat_var(concatid) {
+	
+}
+
+function cancel_concat_var(concatid) {
+
+	var concatelement = document.getElementById(concatid);
+	
+	for (var i = 0; i < concatelement.options.length; i++) {
+		if (concatelement.options[i].selected) {
+			concatelement.options[i].selected = false;
+		}
+	}
+	
+	return false;
+}
 
 function change_argument_type(element, argumentkey) {
 

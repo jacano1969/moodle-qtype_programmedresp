@@ -241,7 +241,7 @@ class programmedresp_qtype extends default_questiontype {
         		if (!$concatvalues = optional_param('concatvar_'.$concatnum, false, PARAM_ALPHANUM)) {
         			print_error('errorcantfindvar', 'qtype_programmedresp', $arg->value);
         		}
-        		
+
         		$concatobj = new stdClass();
         		$concatobj->name = 'concatvar_'.$concatnum;
         		$concatobj->values = $concatvalues;

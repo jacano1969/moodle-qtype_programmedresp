@@ -16,6 +16,35 @@ class programmedresp_output {
     }
     
     
+    function add_concat_var($name, $vars, $values = false, $return = false) {
+    	
+    	$concatdiv = '<strong>'.$name.'</strong><br/>';
+        $concatdiv.= '<select id="'.$name.'" name="'.$name.'[]" multiple="multiple">';
+                    
+        // Marking the selected vars
+        foreach ($vars as $var) {
+            $selectedstr = '';
+            if ($values) {
+	            foreach ($values as $concatvar) {
+	                if ($var == $concatvar) {
+	                    $selectedstr = 'selected="selected"';
+	                }
+	            }
+            }
+            $concatdiv.= '<option value="'.$var.'" '.$selectedstr.'>'.$var.'</option>';
+        }
+        $concatdiv.= '</select>';
+        $concatdiv.= '&nbsp;&nbsp;<input type="button" onclick="confirm_concat_var(\''.$name.'\');" value="'.get_string('confirmconcatvar', 'qtype_programmedresp').'"/>';
+        $concatdiv.= '&nbsp;<input type="button" onclick="cancel_concat_var(\''.$name.'\');" value="'.get_string('cancelconcatvar', 'qtype_programmedresp').'" />';
+        $concatdiv.= '<br/><br/>';
+                    
+    	if ($return) {
+    		return $concatdiv;
+    	}
+    	
+    	echo $concatdiv;
+    }
+    
     /**
      * Prints form elements for the question vars based on question->questiontext
      * @param string $questiontext
@@ -47,20 +76,7 @@ class programmedresp_output {
         	foreach ($args as $arg) {
         		if (PROGRAMMEDRESP_ARG_CONCAT == $arg->type) {
         			$concatdata = programmedresp_unserialize($arg->value);
-        			$concatdiv.= '<strong>'.$concatdata->name.'</strong><br/>';
-                    $concatdiv.= '<select id="'.$concatdata->name.'" name="'.$concatdata->name.'" multiple="multiple">';
-                    
-                    // Marking the selected vars
-                    foreach ($vars as $var) {
-                    	$selectedstr = '';
-                    	foreach ($concatdata->values as $concatvar) {
-                    		if ($var == $concatvar) {
-                    			$selectedstr = 'selected="selected"';
-                    		}
-                    	}
-                    	$concatdiv.= '<option value="'.$var.'" '.$selectedstr.'>'.$var.'</option>';
-                    }
-                    $concatdiv.= '</select><br/><br/>';
+        			$concatdiv.= $this->add_concat_var($concatdata->name, $vars, $concatdata->values, true);
         		}
         	}
         }
