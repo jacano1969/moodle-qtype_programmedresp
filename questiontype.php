@@ -280,6 +280,7 @@ class programmedresp_qtype extends default_questiontype {
         }
         
         delete_records('question_programmedresp_var', 'programmedrespid', $programmedresp->id);
+        delete_records('question_programmedresp_val', 'programmedrespid', $programmedresp->id);
         delete_records('question_programmedresp_arg', 'programmedrespid', $programmedresp->id);
         delete_records('question_programmedresp_resp', 'programmedrespid', $programmedresp->id);
         delete_records('question_programmedresp', 'question', $questionid);
