@@ -60,8 +60,19 @@ function display_vars(element, novarsstring, edit) {
 function functionsection_visible() {
     
     var functionheader = document.getElementById("functionheader");
-    functionheader.style.visibility = "visible";
-    functionheader.style.display = "inline";
+    var fakecaller = document.getElementById("id_programmedrespfid");
+    
+    // If it's hidden let's show it
+    if (functionheader.style.visibility == "hidden" || functionheader.style.display == "none") {
+    	functionheader.style.visibility = "visible";
+    	functionheader.style.display = "inline";
+    	
+    // If there is a selected function reload the function arguments
+    } else if (fakecaller) {
+    	display_args(fakecaller);
+    } else {
+    	alert('ni un ni laltre');
+    }
     
     return false;
 }
