@@ -28,15 +28,17 @@ switch ($action) {
 	
 	case 'addcategory':
 		
+        $catoptions[0] = get_string('root', 'qtype_programmedresp');
 		$categories = get_records('question_programmedresp_fcat', '', '', 'id ASC', 'id, parent, name');
-		$catoptions[0] = get_string('root', 'qtype_programmedresp');
-        foreach ($categories as $key => $cat) {
-            if (empty($catoptions[$cat->id])) {
-                $catoptions[$cat->id] = $cat->name;
-                unset($categories[$key]);
-                programmedresp_add_child_categories($cat->id, $catoptions, $categories);
-            }
-        }
+		if ($categories) {
+	        foreach ($categories as $key => $cat) {
+	            if (empty($catoptions[$cat->id])) {
+	                $catoptions[$cat->id] = $cat->name;
+	                unset($categories[$key]);
+	                programmedresp_add_child_categories($cat->id, $catoptions, $categories);
+	            }
+	        }
+		}
 		
 		$form = new programmedresp_addcategory_form($CFG->wwwroot.'/question/type/programmedresp/manage.php', array('categories' => $catoptions));
 		

@@ -39,12 +39,14 @@ class question_edit_programmedresp_form extends question_edit_form {
     	}
     	
     	$catoptions = array(0 => '&nbsp;('.get_string('selectcategory', 'qtype_programmedresp').')&nbsp;');
-    	foreach ($categories as $key => $cat) {
-    		if (empty($catoptions[$cat->id])) {
-    			$catoptions[$cat->id] = $cat->name;
-                unset($categories[$key]);
-                programmedresp_add_child_categories($cat->id, $catoptions, $categories);
-    		}
+    	if ($categories) {
+	    	foreach ($categories as $key => $cat) {
+	    		if (empty($catoptions[$cat->id])) {
+	    			$catoptions[$cat->id] = $cat->name;
+	                unset($categories[$key]);
+	                programmedresp_add_child_categories($cat->id, $catoptions, $categories);
+	    		}
+	    	}
     	}
 
     	$tolerancetypes = array(PROGRAMMEDRESP_TOLERANCE_NOMINAL => get_string('tolerancenominal', 'qtype_programmedresp'),
@@ -62,8 +64,15 @@ class question_edit_programmedresp_form extends question_edit_form {
         if (!empty($this->question->id)) {
             $editingjsparam = 'true';
         }
+        
+        // Button label
+        if (!empty($this->question->id)) {
+            $buttonlabel = get_string('assignvarsvalues', 'qtype_programmedresp');
+        } else {
+        	$buttonlabel = get_string('refreshvarsvalues', 'qtype_programmedresp');
+        }
         $varsattrs = array('onclick' => 'display_vars(this, "'.get_string("novars", "qtype_programmedresp").'", '.$editingjsparam.');');
-        $mform->addElement('button', 'vars', get_string('assignvarsvalues', 'qtype_programmedresp'), $varsattrs);
+        $mform->addElement('button', 'vars', $buttonlabel, $varsattrs);
         
     	// Link to fill vars data
     	$mform->addElement('header', 'varsheader', get_string("varsvalues", "qtype_programmedresp"));

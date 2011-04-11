@@ -88,7 +88,14 @@ class programmedresp_output {
         // TODO: Add a check_maximum and check_minimum to ensure max > min
         
         $attrs['onclick'] = 'return functionsection_visible();';
-        $this->print_form_button(get_string("assignfunction", "qtype_programmedresp"), 'function', $attrs);
+        
+        // Button text
+        if (empty($args)) {
+        	$buttonlabel = get_string("assignfunction", "qtype_programmedresp");
+        } else {
+        	$buttonlabel = get_string("refresharguments", "qtype_programmedresp");
+        }
+        $this->print_form_button($buttonlabel, 'function', $attrs);
         
     }
     
