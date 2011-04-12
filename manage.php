@@ -59,7 +59,7 @@ switch ($action) {
 			echo 'display_functionslist(categorieselement);';
 			echo 'update_addfunctionurl();';
 			echo 'wwwroot = false;';  // Restore the default value
-			//echo 'window.close();';
+			echo 'window.close();';
 			echo '</script>';
 			
 	    // Display form
