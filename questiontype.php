@@ -564,10 +564,9 @@ class programmedresp_qtype extends default_questiontype {
     	if (strval($result) == strval($response)) {
     	   return 1;
     	}
-
-    	// For infinite values
-        if (!is_integer($response) && !is_float($response)) {
-        	
+    	
+    	// If it's not an integer nor a float it's a string
+    	if (!preg_match('/^[0-9]$/', $response) && !preg_match('/^[0-9]+\.[0-9]+$/', $response)) {
         	// It has been previoulsy tested strval() vs strval()
         	return 0;
         }
