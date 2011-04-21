@@ -24,6 +24,7 @@ $string['confirmconcatvar'] = 'Confirmar variable';
 $string['questionresultslabels'] = 'Etiquetas de la respuestas de la pregunta';
 $string['editingprogrammedresp'] = 'Editando preguntas programadas';
 $string['editresponselabels'] = 'Editar etiquetas de las respuestas';
+$string['errorargumentnoassigned'] = 'Hay un argumento de tipo cuestionario guiado que no se ha assignado a ninguna variable';
 $string['errorcantaccessfile'] = 'No se puede acceder al archivo de funciones';
 $string['errorcantfindvar'] = 'No se puede encontrar la variable $a';
 $string['errordb'] = 'Error de base de datos';

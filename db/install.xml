@@ -102,8 +102,9 @@
     <TABLE NAME="question_programmedresp_val" COMMENT="Values of the programmed responses questions vars" PREVIOUS="question_programmedresp_fcat">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="attemptid"/>
-        <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="programmedrespvarid"/>
-        <FIELD NAME="programmedrespvarid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="attemptid" NEXT="varvalues"/>
+        <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="module"/>
+        <FIELD NAME="module" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="attemptid" NEXT="programmedrespvarid"/>
+        <FIELD NAME="programmedrespvarid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="module" NEXT="varvalues"/>
         <FIELD NAME="varvalues" TYPE="text" LENGTH="medium" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="programmedrespvarid"/>
       </FIELDS>
       <KEYS>

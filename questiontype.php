@@ -279,10 +279,17 @@ class programmedresp_qtype extends default_questiontype {
             return false;
         }
         
-        delete_records('question_programmedresp_var', 'programmedrespid', $programmedresp->id);
-        delete_records('question_programmedresp_val', 'programmedrespid', $programmedresp->id);
         delete_records('question_programmedresp_arg', 'programmedrespid', $programmedresp->id);
         delete_records('question_programmedresp_resp', 'programmedrespid', $programmedresp->id);
+        
+        $vars = get_records('question_programmedresp_var', 'programmedrespid', $programmedresp->id);
+        if ($vars) {
+        	foreach ($vars as $var) {
+        		delete_records('question_programmedresp_val', 'programmedrespvarid', $var->id);
+        	}
+        }
+        
+        delete_records('question_programmedresp_var', 'programmedrespid', $programmedresp->id);
         delete_records('question_programmedresp', 'question', $questionid);
         
         return true;
@@ -326,6 +333,9 @@ class programmedresp_qtype extends default_questiontype {
     	
         global $CFG;
 
+        // Getting the module name from thispageurl
+        $modname = programmedresp_get_modname();
+        
         $programmedresp = get_record('question_programmedresp', 'question', $state->question);
         if (!$programmedresp) {
             return false;
@@ -340,12 +350,13 @@ class programmedresp_qtype extends default_questiontype {
         foreach ($question->options->vars as $var) {
 
         	// If this attempt doesn't have yet a value 
-        	if (!$values = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $state->attempt, 'programmedrespvarid', $var->id)) {
+        	if (!$values = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $state->attempt, 'programmedrespvarid', $var->id, 'module', $modname)) {
         		
                 // Add a new random value
+                $programmedrespval->module = $modname;
         		$programmedrespval->attemptid = $state->attempt;
         		$programmedrespval->programmedrespvarid = $var->id;
-        		$programmedrespval->varvalues = programmedresp_serialize(get_random_value($var));
+        		$programmedrespval->varvalues = programmedresp_serialize(programmedresp_get_random_value($var));
         		if (!insert_record('question_programmedresp_val', $programmedrespval)) {
         			print_error('errordb', 'qtype_programmedresp');
         		}
@@ -447,37 +458,35 @@ class programmedresp_qtype extends default_questiontype {
      * @param object $arg
      * @param array $vars
      * @param integer $attemptid
+     * @param integer $quizid
      * @return string
      */
-    function get_exec_arg($arg, $vars, $attemptid) {
+    function get_exec_arg($arg, $vars, $attemptid, $quizid) {
 
+    	global $CFG;
+    	
+    	$modname = programmedresp_get_modname();
+    	
     	switch ($arg->type) {
     		
     		case PROGRAMMEDRESP_ARG_FIXED:
     			
-    			$value = $arg->value;
-    			if (strstr($value, ',') != false) {
-    				$value = $this->get_function_params_array(explode(',', $value));
+    			if (strstr($arg->value, ',')) {
+    				$randomvalues = explode(',', $arg->value);
+    			} else {
+    				$randomvalues = array($arg->value);
     			}
     			
     			break;
     			
     		case PROGRAMMEDRESP_ARG_VARIABLE:
     			
-    			$randomvalues = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $attemptid, 'programmedrespvarid', $arg->value);
+    			$randomvalues = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $attemptid, 'programmedrespvarid', $arg->value, 'module', $modname);
     			if (!$randomvalues) {
     				print_error('errornorandomvaluesdata', 'qtype_programmedresp');
     			}
     			$randomvalues = programmedresp_unserialize($randomvalues);
     			
-    			// If 1 is the array size the param type is an integer|float
-    			if (count($randomvalues) == 1) {
-    				$value = $randomvalues[0];
-    				
-    			// Return it as a string to eval()
-    			} else {
-    				$value = $this->get_function_params_array($randomvalues);
-    			}
     			break;
     			
     		case PROGRAMMEDRESP_ARG_CONCAT: 
@@ -485,7 +494,7 @@ class programmedresp_qtype extends default_questiontype {
     			$concatdata = programmedresp_unserialize($arg->value);
     			
     			// To store the concatenated vars
-    			$concatarray = array();
+    			$randomvalues = array();
 
     			// Getting the random param of each concat var
     			foreach ($concatdata->values as $varname) {
@@ -500,20 +509,40 @@ class programmedresp_qtype extends default_questiontype {
     					print_error('errorcantfindvar', 'qtype_programmedresp', $varname);
     				}
     				
-    				$randomvalues = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $attemptid, 'programmedrespvarid', $varid);
-	                if (!$randomvalues) {
+    				$random = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $attemptid, 'programmedrespvarid', $varid, 'module', $modname);
+	                if (!$random) {
 	                    print_error('errornorandomvaluesdata', 'qtype_programmedresp');
 	                }
-	                $concatarray = array_merge($concatarray, programmedresp_unserialize($randomvalues));
+	                $randomvalues = array_merge($randomvalues, programmedresp_unserialize($random));
     			}
     			
-    			$value = $this->get_function_params_array($concatarray);
     			break;
     			
     		case PROGRAMMEDRESP_ARG_GUIDEDQUIZ:
-    			// TODO
+    			
+    			$sql = "SELECT gv.varvalues FROM {$CFG->prefix}guidedquiz_val gv 
+    			        JOIN {$CFG->prefix}guidedquiz_var_arg gva ON gv.guidedquizvarid = gva.guidedquizvarid  
+    			        WHERE gva.quizid = '$quizid' AND gva.programmedrespargid = '{$arg->id}' AND gv.attemptid = '$attemptid'";
+
+    			$vardata = get_record_sql($sql);
+    			
+    			if (!$vardata) {
+    				print_error('errorargumentnoassigned', 'qtype_programmedresp');
+    			}
+    			$randomvalues = programmedresp_unserialize($vardata->varvalues);
+
     			break;
     	}
+    	
+    
+        // If 1 is the array size the param type is an integer|float
+        if (count($randomvalues) == 1) {
+            $value = $randomvalues[0];
+                    
+        // Return it as a string to eval()
+        } else {
+            $value = $this->get_function_params_array($randomvalues);
+        }
     	
     	return $value;
     }
@@ -599,7 +628,7 @@ class programmedresp_qtype extends default_questiontype {
     function get_correct_responses(&$question, &$state) {
 
         global $CFG;
-        
+
         // Programmed functions container
         require_once($CFG->dataroot.'/qtype_programmedresp.php');
 
@@ -614,13 +643,17 @@ class programmedresp_qtype extends default_questiontype {
         
         // Executes the function and stores the result/s in $results var
         $exec = '$results = @'.$function->name.'(';
+
+
+        $modname = programmedresp_get_modname();
+        $quizid = programmedresp_get_quizid($state->attempt, $modname);
         
         foreach ($args as $arg) {
-            $execargs[] = $this->get_exec_arg($arg, $vars, $state->attempt);
+            $execargs[] = $this->get_exec_arg($arg, $vars, $state->attempt, $quizid);
         }
         $exec.= implode(', ', $execargs);
         $exec.= ');';
-        
+
         // Remove the output generated
         $exec = 'ob_start();'.$exec.'ob_end_clean();';
         

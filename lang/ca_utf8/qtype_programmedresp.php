@@ -24,6 +24,7 @@ $string['confirmconcatvar'] = 'Confirmar variable';
 $string['questionresultslabels'] = 'Etiquetes de les respostes';
 $string['editingprogrammedresp'] = 'Editant pregunta programada';
 $string['editresponselabels'] = 'Edita les etiquetes de les respostes';
+$string['errorargumentnoassigned'] = 'Hi ha argument de tipus qüestionari guiat que no té cap variable assignada';
 $string['errorcantaccessfile'] = 'No es pot accedir a l\'arxiu de funcions';
 $string['errorcantfindvar'] = 'No es pot trobar la variable $a';
 $string['errordb'] = 'Error de base de dades';

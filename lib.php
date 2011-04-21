@@ -286,7 +286,7 @@ function programmedresp_unserialize($var) {
  * @param unknown_type $vardata
  * @return array Values array, array with size = 1 if there is a single value 
  */
-function get_random_value($vardata) {
+function programmedresp_get_random_value($vardata) {
         
     $values = array();
     for ($i = 0; $i < $vardata->nvalues; $i++) {
@@ -297,3 +297,30 @@ function get_random_value($vardata) {
         
     return $values;
 }
+
+
+/**
+ * Returns the module in use
+ * @return string
+ */
+function programmedresp_get_modname() {
+
+	global $CFG;
+
+    $withoutmod = substr(str_replace($CFG->dirroot, '', $_SERVER['SCRIPT_FILENAME']), 5);       // The 5 is the /mod/
+    $modname = substr($withoutmod, 0, strpos($withoutmod, '/'));
+
+    return $modname;
+}
+
+
+/**
+ * Returns the quiz
+ * @param integer $attemptid
+ * @param string $modname
+ * @return integer The quiz of the attempt
+ */
+function programmedresp_get_quizid($attemptid, $modname) {
+	return get_field($modname.'_attempts', 'quiz', 'uniqueid', $attemptid);
+}
+

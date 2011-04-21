@@ -24,6 +24,7 @@ $string['confirmconcatvar'] = 'Confirm variable';
 $string['questionresultslabels'] = 'Question results labels';
 $string['editingprogrammedresp'] = 'Editing Programmed response';
 $string['editresponselabels'] = 'Edit response labels';
+$string['errorargumentnoassigned'] = 'There is a guided quiz argument without var assigned';
 $string['errorcantaccessfile'] = 'Functions file is not accessible';
 $string['errorcantfindvar'] = 'The variable $a can not be found';
 $string['errordb'] = 'DB error';
