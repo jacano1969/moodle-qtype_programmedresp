@@ -279,3 +279,21 @@ function programmedresp_unserialize($var) {
     
 	return $var;
 }
+
+/**
+ * Gets random value/s
+ * 
+ * @param unknown_type $vardata
+ * @return array Values array, array with size = 1 if there is a single value 
+ */
+function get_random_value($vardata) {
+        
+    $values = array();
+    for ($i = 0; $i < $vardata->nvalues; $i++) {
+            
+        $differentincrements = round(($vardata->maximum - $vardata->minimum) / $vardata->valueincrement);
+        $values[] = $vardata->minimum + (rand(0, $differentincrements) * $vardata->valueincrement);
+    }
+        
+    return $values;
+}

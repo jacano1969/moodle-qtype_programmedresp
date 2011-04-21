@@ -54,7 +54,6 @@ switch ($action) {
 			echo '<script type="text/javascript">';
 			echo 'add_to_parent("'.$catdata->id.'", "'.$catdata->name.'", "id_functioncategory", "'.$data->parent.'");';
             echo 'opened = true;'; // We work with the opener window
-            echo 'wwwroot = "'.$CFG->wwwroot.'";'; // Notify the path
 			echo 'var categorieselement = window.opener.document.getElementById("id_functioncategory");';
 			echo 'display_functionslist(categorieselement);';
 			echo 'update_addfunctionurl();';

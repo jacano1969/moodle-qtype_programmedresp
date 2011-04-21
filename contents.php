@@ -24,7 +24,8 @@ switch ($action) {
 	
 	// Question text vars
 	case 'displayvars' :
-		$outputmanager->display_vars();
+		$displayfunctionbutton = optional_param('displayfunctionbutton', true, PARAM_INT);
+		$outputmanager->display_vars(false, false, $displayfunctionbutton);
 		break;
 
     // Functions <select>

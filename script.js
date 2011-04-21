@@ -5,7 +5,6 @@ var maxconcatnum = 50;
 var varmatchpattern = /\{\$[a-zA-Z0-9]*\}/g;
 var editing = false;
 var opened = false;
-var wwwroot = false;
 
 function get_questiontext() {
     
@@ -43,12 +42,17 @@ function get_next_concat_num() {
 	return maxconcatnum;
 }
 
-function display_vars(element, novarsstring, edit) {
+function display_vars(element, novarsstring, edit, displayfunctionbutton) {
 
     callerelement = element;
 
     if (edit != undefined) {
         editing = edit;
+    }
+    
+    var functionbuttonstr = '';
+    if (displayfunctionbutton) {
+    	functionbuttonstr = '&displayfunctionbutton=true';
     }
     
     var varsheader = document.getElementById("varsheader");
@@ -66,7 +70,7 @@ function display_vars(element, novarsstring, edit) {
     }
 
     
-    display_section("action=displayvars&questiontext=" + questiontextvalue);
+    display_section("action=displayvars" + functionbuttonstr + "&questiontext=" + questiontextvalue);
 }
 
 function functionsection_visible() {
@@ -156,11 +160,7 @@ function display_section(params) {
           timeout: 50000
     };
 
-    var prefix = '';
-    if (wwwroot != false) {
-        prefix = wwwroot + "/question/";
-    }
-    YAHOO.util.Connect.asyncRequest("POST", prefix + "type/programmedresp/contents.php", callbackHandler, params);
+    YAHOO.util.Connect.asyncRequest("POST", wwwroot + "/question/type/programmedresp/contents.php", callbackHandler, params);
     
     return callbackResult;
 }
@@ -232,7 +232,7 @@ function add_concat_var() {
     };
     
     var params = "action=addconcatvar&concatnum=" + concatnum + varsstring;
-    YAHOO.util.Connect.asyncRequest("POST", "type/programmedresp/contents.php", callbackHandler, params);
+    YAHOO.util.Connect.asyncRequest("POST", wwwroot + "/question/type/programmedresp/contents.php", callbackHandler, params);
     
     return callbackResult;
 }

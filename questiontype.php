@@ -345,7 +345,7 @@ class programmedresp_qtype extends default_questiontype {
                 // Add a new random value
         		$programmedrespval->attemptid = $state->attempt;
         		$programmedrespval->programmedrespvarid = $var->id;
-        		$programmedrespval->varvalues = programmedresp_serialize($this->get_random_value($var));
+        		$programmedrespval->varvalues = programmedresp_serialize(get_random_value($var));
         		if (!insert_record('question_programmedresp_val', $programmedrespval)) {
         			print_error('errordb', 'qtype_programmedresp');
         		}
@@ -391,25 +391,6 @@ class programmedresp_qtype extends default_questiontype {
         }
     
         include("$CFG->dirroot/question/type/programmedresp/display.html");
-    }
-    
-    
-    /**
-     * Gets random value/s
-     * 
-     * @param unknown_type $vardata
-     * @return array Values array, array with size = 1 if there is a single value 
-     */
-    function get_random_value($vardata) {
-    	
-    	$values = array();
-    	for ($i = 0; $i < $vardata->nvalues; $i++) {
-    		
-    		$differentincrements = round(($vardata->maximum - $vardata->minimum) / $vardata->valueincrement);
-    		$values[] = $vardata->minimum + (rand(0, $differentincrements) * $vardata->valueincrement);
-    	}
-    	
-    	return $values;
     }
     
     

@@ -22,6 +22,11 @@ class question_edit_programmedresp_form extends question_edit_form {
         
     	require_js(array('yui_yahoo', 'yui_event', 'yui_connection'));
     	
+    	// Adding wwwroot
+        echo "<script type=\"text/javascript\">//<![CDATA[\n".
+             "var wwwroot = '".$CFG->wwwroot."';\n".
+             "//]]></script>\n";
+    	
     	// To lower than 1.9.9
     	require_js($CFG->wwwroot.'/question/type/programmedresp/script.js');
     	echo '<link rel="stylesheet" type="text/css" href="'.$CFG->wwwroot.'/question/type/programmedresp/styles.css" />';

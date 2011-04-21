@@ -49,7 +49,7 @@ class programmedresp_output {
      * Prints form elements for the question vars based on question->questiontext
      * @param string $questiontext
      */
-    function display_vars($questiontext = false, $args = false) {
+    function display_vars($questiontext = false, $args = false, $displayfunctionbutton = true) {
 
         $vars = programmedresp_get_question_vars($questiontext);
         
@@ -87,15 +87,18 @@ class programmedresp_output {
         
         // TODO: Add a check_maximum and check_minimum to ensure max > min
         
-        $attrs['onclick'] = 'return functionsection_visible();';
-        
-        // Button text
-        if (empty($args)) {
-        	$buttonlabel = get_string("assignfunction", "qtype_programmedresp");
-        } else {
-        	$buttonlabel = get_string("refresharguments", "qtype_programmedresp");
+        // The guided quiz should not display the functions button
+        if ($displayfunctionbutton) {
+	        $attrs['onclick'] = 'return functionsection_visible();';
+	        
+	        // Button text
+	        if (empty($args)) {
+	        	$buttonlabel = get_string("assignfunction", "qtype_programmedresp");
+	        } else {
+	        	$buttonlabel = get_string("refresharguments", "qtype_programmedresp");
+	        }
+	        $this->print_form_button($buttonlabel, 'function', $attrs);
         }
-        $this->print_form_button($buttonlabel, 'function', $attrs);
         
     }
     
