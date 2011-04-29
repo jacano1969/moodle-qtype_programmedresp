@@ -57,7 +57,6 @@ switch ($action) {
 			echo 'var categorieselement = window.opener.document.getElementById("id_functioncategory");';
 			echo 'display_functionslist(categorieselement);';
 			echo 'update_addfunctionurl();';
-			echo 'wwwroot = false;';  // Restore the default value
 			echo 'window.close();';
 			echo '</script>';
 			

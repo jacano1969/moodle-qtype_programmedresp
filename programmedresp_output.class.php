@@ -51,7 +51,10 @@ class programmedresp_output {
      */
     function display_vars($questiontext = false, $args = false, $displayfunctionbutton = true) {
 
-        $vars = programmedresp_get_question_vars($questiontext);
+        if (!$vars = programmedresp_get_question_vars($questiontext)) {
+        	$this->print_form_htmlraw('<span class="error">'.get_string('novars', 'qtype_programmedresp').'</span>');
+        	return false;
+        }
         
         // The variables fields
         $fields = programmedresp_get_var_fields();

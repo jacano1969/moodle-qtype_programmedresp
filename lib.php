@@ -36,7 +36,7 @@ function programmedresp_get_question_vars($questiontext = false) {
     preg_match_all($pattern, $questiontext, $matches);
         
     if (empty($matches) || empty($matches[0])) {
-        die();
+        return false;
     }
         
     foreach ($matches[0] as $match) {
