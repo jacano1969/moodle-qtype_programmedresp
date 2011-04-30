@@ -31,15 +31,15 @@ function get_questiontext() {
 }
 
 function get_next_concat_num() {
-	
-	for (var i = 0; i < maxconcatnum; i++) {
-		var tmpconcat = document.getElementById("concatvar_" + i);
-		if (!tmpconcat) {
-			return i;
-		}
-	}
-	
-	return maxconcatnum;
+    
+    for (var i = 0; i < maxconcatnum; i++) {
+        var tmpconcat = document.getElementById("concatvar_" + i);
+        if (!tmpconcat) {
+            return i;
+        }
+    }
+    
+    return maxconcatnum;
 }
 
 function display_vars(element, novarsstring, edit, displayfunctionbutton) {
@@ -52,7 +52,7 @@ function display_vars(element, novarsstring, edit, displayfunctionbutton) {
     
     var functionbuttonstr = '';
     if (displayfunctionbutton) {
-    	functionbuttonstr = '&displayfunctionbutton=true';
+        functionbuttonstr = '&displayfunctionbutton=true';
     }
     
     var varsheader = document.getElementById("varsheader");
@@ -80,12 +80,12 @@ function functionsection_visible() {
     
     // If it's hidden let's show it
     if (functionheader.style.visibility == "hidden" || functionheader.style.display == "none") {
-    	functionheader.style.visibility = "visible";
-    	functionheader.style.display = "inline";
-    	
+        functionheader.style.visibility = "visible";
+        functionheader.style.display = "inline";
+        
     // If there is a selected function reload the function arguments
     } else if (fakecaller) {
-    	display_args(fakecaller);
+        display_args(fakecaller);
     }
     
     return false;
@@ -238,8 +238,8 @@ function add_concat_var() {
 }
 
 function process_add_concat_var(transaction) {
-	
-	var maindiv = document.getElementById("id_concatvars");
+    
+    var maindiv = document.getElementById("id_concatvars");
     var vardiv = document.createElement("div");
     
     vardiv.innerHTML = transaction.responseText;
@@ -247,7 +247,7 @@ function process_add_concat_var(transaction) {
 }
 
 function failure_add_concat_var() {
-	
+    
 }
 
 function get_questiontext_vars() {
@@ -261,27 +261,27 @@ function get_questiontext_vars() {
     
     var returnarray = new Array();
     for (var i = 0; i < matches.length; i++) {
-    	returnarray.push(matches[i].substr(2, (matches[i].length - 3)));
+        returnarray.push(matches[i].substr(2, (matches[i].length - 3)));
     }
     
     return returnarray;
 }
 
 function confirm_concat_var(concatid) {
-	
+    
 }
 
 function cancel_concat_var(concatid) {
 
-	var concatelement = document.getElementById(concatid);
-	
-	for (var i = 0; i < concatelement.options.length; i++) {
-		if (concatelement.options[i].selected) {
-			concatelement.options[i].selected = false;
-		}
-	}
-	
-	return false;
+    var concatelement = document.getElementById(concatid);
+    
+    for (var i = 0; i < concatelement.options.length; i++) {
+        if (concatelement.options[i].selected) {
+            concatelement.options[i].selected = false;
+        }
+    }
+    
+    return false;
 }
 
 function change_argument_type(element, argumentkey) {
