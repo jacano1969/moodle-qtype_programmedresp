@@ -353,14 +353,10 @@ class programmedresp_qtype extends default_questiontype {
         	if (!$values = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $state->attempt, 'programmedrespvarid', $var->id, 'module', $modname)) {
         		
                 // Add a new random value
-                $programmedrespval->module = $modname;
-        		$programmedrespval->attemptid = $state->attempt;
-        		$programmedrespval->programmedrespvarid = $var->id;
-        		$programmedrespval->varvalues = programmedresp_serialize(programmedresp_get_random_value($var));
-        		if (!insert_record('question_programmedresp_val', $programmedrespval)) {
-        			print_error('errordb', 'qtype_programmedresp');
-        		}
-        		$values = $programmedrespval->varvalues;
+                $values = $this->generate_value($state->attempt, $var, $modname);
+                if (is_null($values)) {
+                	print_error('errordb', 'qtype_programmedresp');
+                }
         	}
         	$values = programmedresp_unserialize($values);
         	
@@ -402,6 +398,33 @@ class programmedresp_qtype extends default_questiontype {
         }
     
         include("$CFG->dirroot/question/type/programmedresp/display.html");
+    }
+    
+    
+    /**
+     * Generates a value based on $var attributes and inserts in into DB
+     * 
+     * @param $attemptid
+     * @param $var 
+     * @param $modname
+     * @return null|string
+     */
+    function generate_value($attemptid, $var, $modname = false) {
+    	
+    	if (!$modname) {
+    		$modname = programmedresp_get_modname();
+    	}
+    	
+        $programmedrespval->module = $modname;
+        $programmedrespval->attemptid = $attemptid;
+        $programmedrespval->programmedrespvarid = $var->id;
+        $programmedrespval->varvalues = programmedresp_serialize(programmedresp_get_random_value($var));
+        if (!insert_record('question_programmedresp_val', $programmedrespval)) {
+            return null;
+        }
+        $values = $programmedrespval->varvalues;
+        
+        return $values;
     }
     
     
@@ -482,8 +505,17 @@ class programmedresp_qtype extends default_questiontype {
     		case PROGRAMMEDRESP_ARG_VARIABLE:
     			
     			$randomvalues = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $attemptid, 'programmedrespvarid', $arg->value, 'module', $modname);
+    			
+    			// If the random value was not previously created let's create it (for example, answer a quiz where this question has not been shown)
     			if (!$randomvalues) {
-    				print_error('errornorandomvaluesdata', 'qtype_programmedresp');
+    				
+    				// Var data
+    				$vardata = get_record('question_programmedresp_var', 'id', $arg->value);
+	    			$values = $this->generate_value($attemptid, $vardata);
+	                if (is_null($values)) {
+	                    print_error('errornorandomvaluesdata', 'qtype_programmedresp');
+	                }
+	                $randomvalues = $values;
     			}
     			$randomvalues = programmedresp_unserialize($randomvalues);
     			
