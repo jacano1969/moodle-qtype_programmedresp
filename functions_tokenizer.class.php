@@ -158,6 +158,11 @@ class functions_tokenizer {
             	$this->errors[] = get_string('function', 'qtype_programmedresp').' '.$function->name.': '.get_string('errorfunctionsuspicious', 'qtype_programmedresp');
                 unset($functions[$key]);
                 continue;
+                
+            } else if (function_exists($function->name)) {
+                $this->errors[] = get_string('function', 'qtype_programmedresp').' '.$function->name.': '.get_string('errorfunctionnative', 'qtype_programmedresp');
+                unset($functions[$key]);
+                continue;
             }
         }
         
