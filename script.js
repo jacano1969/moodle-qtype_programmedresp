@@ -69,7 +69,8 @@ function display_vars(element, novarsstring, edit, displayfunctionbutton) {
         return false;
     }
 
-    
+    // Stripping the ampersand
+    questiontextvalue = questiontextvalue.replace("&", "%26");
     display_section("action=displayvars" + functionbuttonstr + "&questiontext=" + questiontextvalue);
 }
 
