@@ -202,7 +202,7 @@ class functions_tokenizer {
      * @param $code
      */
     function check_syntax($code) {
-        return eval('return true;' . $code);
+        return @eval('return true;' . $code);
     }
     
     

@@ -10,7 +10,8 @@
 
 $string['addcategory'] = 'Afegir una categoria';
 $string['addconcatvar'] = 'Afegir una variable concatenada';
-$string['addfunction'] = 'Afegir funcions';
+$string['addfunction'] = 'Add functions';
+$string['addfunctions'] = 'Afegir funcions';
 $string['addingprogrammedresp'] = 'Afegint pregunta programada';
 $string['argconcat'] = 'Variable concatenada';
 $string['argfixed'] = 'Fixe';

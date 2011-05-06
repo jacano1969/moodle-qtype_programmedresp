@@ -11,6 +11,7 @@
 $string['addcategory'] = 'Add a category';
 $string['addconcatvar'] = 'Add a concatenated variable';
 $string['addfunction'] = 'Add functions';
+$string['addfunctions'] = 'Add functions';
 $string['addingprogrammedresp'] = 'Adding Programmed response';
 $string['argconcat'] = 'Concatenated variable';
 $string['argfixed'] = 'Fixed';

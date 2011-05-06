@@ -20,9 +20,13 @@ require_capability('moodle/question:config', get_context_instance(CONTEXT_SYSTEM
 
 require_js(array('yui_yahoo', 'yui_event', 'yui_connection'));        
 require_js($CFG->wwwroot.'/question/type/programmedresp/script.js');
-
+        
 print_header_simple(get_string($action, 'qtype_programmedresp'));
 
+// Adding wwwroot
+echo "<script type=\"text/javascript\">//<![CDATA[\n".
+    "var wwwroot = '".$CFG->wwwroot."';\n".
+    "//]]></script>\n";
 
 switch ($action) {
 	
