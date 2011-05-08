@@ -84,7 +84,7 @@ class functions_tokenizer {
 	                        }
 	                    }
 	                    if (empty($found)) {
-	                        $functions[$i]->functioncode .= $tokendata[1];
+	                        $functions[$i]->functioncode .= $tokendata[1].' ';
 	                    }
 	                }
 	            }
@@ -171,8 +171,6 @@ class functions_tokenizer {
 	                continue;
 	                
 	            } else if (function_exists($function->name)) {
-	                notify($function->name);
-	                notify(print_r(get_defined_functions()));
 	                $this->errors[] = get_string('function', 'qtype_programmedresp').' '.$function->name.': '.get_string('errorfunctionnative', 'qtype_programmedresp');
 	                unset($functions[$key]);
 	                continue;
