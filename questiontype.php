@@ -457,6 +457,9 @@ class programmedresp_qtype extends default_questiontype {
         $nresponses = 0;
         foreach ($correctresults as $resultkey => $correctresult) {
             
+        	if (empty($state->responses[$resultkey])) {
+        		$state->responses[$resultkey] = '';
+        	}
             // Compares the response against the correct result
             $fractions[] = $this->test_programmed_response($correctresult, $state->responses[$resultkey], $programmedresp);
             $nresponses++;
