@@ -3,6 +3,7 @@ var callbackResult = false;
 var callerelement = false;
 var maxconcatnum = 50;
 var varmatchpattern = /\{\$[a-zA-Z0-9]*\}/g;
+var questiontextregexpfilter = /[^0-9a-z{}\$\ ]/g;
 var editing = false;
 var opened = false;
 
@@ -69,8 +70,8 @@ function display_vars(element, novarsstring, edit, displayfunctionbutton) {
         return false;
     }
 
-    // Stripping the ampersand
-    questiontextvalue = questiontextvalue.replace("&", "%26");
+    // Stripping garbage, we only want vars as much as we can
+    questiontextvalue = questiontextvalue.replace(questiontextregexpfilter, " ");
     display_section("action=displayvars" + functionbuttonstr + "&questiontext=" + questiontextvalue);
 }
 
@@ -137,8 +138,10 @@ function display_args(element) {
         }
     }
 
+    var questiontextvalue = get_questiontext().replace(questiontextregexpfilter, " ");
+    
     // function id + question text to extract the vars + the concatenated vars created
-    return display_section("action=displayargs&function=" + functionid + "&questiontext=" + get_questiontext() + concatstring);
+    return display_section("action=displayargs&function=" + functionid + "&questiontext=" + questiontextvalue + concatstring);
 }
 
 
