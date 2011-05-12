@@ -28,6 +28,7 @@ $string['editresponselabels'] = 'Editar etiquetas de las respuestas';
 $string['errorargumentnoassigned'] = 'Hay un argumento de tipo cuestionario guiado que no se ha assignado a ninguna variable';
 $string['errorcantaccessfile'] = 'No se puede acceder al archivo de funciones';
 $string['errorcantfindvar'] = 'No se puede encontrar la variable $a';
+$string['errorcantpreview'] = 'Las preguntas programadas no se pueden previsualizar fuera de un cuestionario';
 $string['errordb'] = 'Error de base de datos';
 $string['erroreditformnotcompleted'] = 'Pregunta incompleta, revisa las variables y la función asignada';
 $string['errorfunctionalreadycreated'] = 'Función creada anteriormente';

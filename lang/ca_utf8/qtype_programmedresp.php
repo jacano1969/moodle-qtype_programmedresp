@@ -10,7 +10,7 @@
 
 $string['addcategory'] = 'Afegir una categoria';
 $string['addconcatvar'] = 'Afegir una variable concatenada';
-$string['addfunction'] = 'Add functions';
+$string['addfunction'] = 'Afegir funcions';
 $string['addfunctions'] = 'Afegir funcions';
 $string['addingprogrammedresp'] = 'Afegint pregunta programada';
 $string['argconcat'] = 'Variable concatenada';
@@ -28,6 +28,7 @@ $string['editresponselabels'] = 'Edita les etiquetes de les respostes';
 $string['errorargumentnoassigned'] = 'Hi ha un argument de tipus qüestionari guiat que no té cap variable assignada';
 $string['errorcantaccessfile'] = 'No es pot accedir a l\'arxiu de funcions';
 $string['errorcantfindvar'] = 'No es pot trobar la variable $a';
+$string['errorcantpreview'] = 'Les preguntes programades no es poden previsualitzar fora d\'un qüestionari';
 $string['errordb'] = 'Error de base de dades';
 $string['erroreditformnotcompleted'] = 'Pregunta incompleta, revisa les variables i la funció assignada';
 $string['errorfunctionalreadycreated'] = 'Funció ja creada';

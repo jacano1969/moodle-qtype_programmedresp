@@ -28,6 +28,7 @@ $string['editresponselabels'] = 'Edit response labels';
 $string['errorargumentnoassigned'] = 'There is a guided quiz argument without var assigned';
 $string['errorcantaccessfile'] = 'Functions file is not accessible';
 $string['errorcantfindvar'] = 'The variable $a can not be found';
+$string['errorcantpreview'] = 'Programmed responses questions can not be previewed without being part of a quiz';
 $string['errordb'] = 'DB error';
 $string['erroreditformnotcompleted'] = 'Incomplete question, check the variables and the assigned function';
 $string['errorfunctionalreadycreated'] = 'Function already created';

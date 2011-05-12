@@ -333,6 +333,10 @@ class programmedresp_qtype extends default_questiontype {
         
         global $CFG;
 
+        if (!$state->attempt) {
+        	print_error('errorcantpreview', 'qtype_programmedresp');
+        }
+        
         // Getting the module name from thispageurl
         $modname = programmedresp_get_modname();
         
