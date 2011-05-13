@@ -16,6 +16,21 @@ function xmldb_qtype_programmedresp_upgrade($oldversion=0) {
         /// Launch add field module
         $result = $result && add_field($table, $field);
     }
+    
+    if ($result && $oldversion < 2011051300) {
+    	
+    	// Drop field responseformat
+        $table = new XMLDBTable('question_programmedresp');
+        $field = new XMLDBField('responseformat');
+        $result = $result && drop_field($table, $field);
+        
+        // Drop field responsedigits
+        $table = new XMLDBTable('question_programmedresp');
+        $field = new XMLDBField('responsedigits');
+
+        /// Launch drop field tolerance
+        $result = $result && drop_field($table, $field);
+    }
 
     return $result;
 }

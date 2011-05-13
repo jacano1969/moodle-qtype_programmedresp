@@ -57,10 +57,6 @@ class question_edit_programmedresp_form extends question_edit_form {
     	$tolerancetypes = array(PROGRAMMEDRESP_TOLERANCE_NOMINAL => get_string('tolerancenominal', 'qtype_programmedresp'),
     	   PROGRAMMEDRESP_TOLERANCE_RELATIVE => get_string('tolerancerelative', 'qtype_programmedresp'));
 
-        $responseformats = array(PROGRAMMEDRESP_RESPONSEFORMAT_DECIMAL => get_string('reponseformatdecimal', 'qtype_programmedresp'), 
-            PROGRAMMEDRESP_RESPONSEFORMAT_SIGNIFICATIVE => get_string('reponseformatsigniticative', 'qtype_programmedresp'));
-
-
         // Form elements
         $outputmanager = new programmedresp_output($mform);
 
@@ -147,14 +143,6 @@ class question_edit_programmedresp_form extends question_edit_form {
         $mform->addRule('tolerance', null, 'numeric', null, 'client');
         $mform->setType('tolerance', PARAM_NUMBER);
 
-        // Response format
-        $mform->addElement('header', 'responseformatheader', get_string('responseformat', 'qtype_programmedresp'));
-        $mform->addElement('select', 'responseformat', get_string('responseformat', 'qtype_programmedresp'), $responseformats);
-        $mform->addElement('text', 'responsedigits', get_string('responsedigits', 'qtype_programmedresp'));
-        $mform->addRule('responsedigits', null, 'required', null, 'client');
-        $mform->addRule('responsedigits', null, 'numeric', null, 'client');
-        $mform->setType('responsedigits', PARAM_NUMBER);
-        
         // Add the onload javascript to hide next steps
         if (empty($this->question->id)) {
         	require_js($CFG->wwwroot.'/question/type/programmedresp/onload.js');
@@ -191,8 +179,8 @@ class question_edit_programmedresp_form extends question_edit_form {
             	$question->{$fieldname} = $resp->label;
             }
             
-            // Tolerance and reponse
-            $programmedresp = array('tolerancetype', 'tolerance', 'responseformat', 'responsedigits');
+            // Tolerance
+            $programmedresp = array('tolerancetype', 'tolerance');
             foreach ($programmedresp as $field) {
                $question->{$field} = $question->options->programmedresp->{$field};
             }

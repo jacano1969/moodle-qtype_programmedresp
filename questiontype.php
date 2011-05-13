@@ -21,7 +21,7 @@ require_once($CFG->dirroot.'/question/type/programmedresp/lib.php');
  */
 class programmedresp_qtype extends default_questiontype {
 
-    var $programmedrespfields = array('programmedrespfid', 'tolerancetype', 'tolerance', 'responseformat', 'responsedigits');
+    var $programmedrespfields = array('programmedrespfid', 'tolerancetype', 'tolerance');
     
     var $exportvarfields = array('varname', 'nvalues', 'maximum', 'minimum', 'valueincrement');
     var $exportargfields = array('argkey', 'type', 'value');
@@ -34,8 +34,7 @@ class programmedresp_qtype extends default_questiontype {
     }
 
     function extra_question_fields() {
-        return array('question_programmedresp', 'programmedrespfid', 'tolerancetype', 
-            'tolerance', 'responseformat', 'responsedigits');
+        return array('question_programmedresp', 'programmedrespfid', 'tolerancetype', 'tolerance');
     }
    
     function questionid_column_name() {
