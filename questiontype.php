@@ -434,7 +434,7 @@ class programmedresp_qtype extends default_questiontype {
     /**
      * Sets the raw_grade. 
      * 
-     * If there are more than one response it takes the lower grade
+     * If there are more than one response it takes the average
      * 
      * @param object $question
      * @param object $state
