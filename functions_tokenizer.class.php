@@ -24,6 +24,7 @@ class functions_tokenizer {
             'T_REQUIRE_ONCE',
             'T_REQUIRE',
            );
+        $this->skippedtokens = array_flip($this->skippedtokens);
     }
     
     function set_code($code) {
@@ -77,13 +78,7 @@ class functions_tokenizer {
 	                } else if (isset($functions[$i]) && isset($functions[$i]->functioncode)) {
 	                    
 	                    // Skipped comments in $this->skippedctoken
-	                    unset($found);
-	                    foreach ($this->skippedtokens as $skippedtokenname) {
-	                        if ($token == $skippedtokenname) {
-	                            $found = true;
-	                        }
-	                    }
-	                    if (empty($found)) {
+	                    if (empty($this->skippedtokens[$token])) {
 	                        $functions[$i]->functioncode .= $tokendata[1].' ';
 	                    }
 	                }
