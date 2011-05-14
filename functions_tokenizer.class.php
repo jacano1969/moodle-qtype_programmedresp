@@ -45,7 +45,7 @@ class functions_tokenizer {
 	                continue;
 	            } 
 	            
-	            if (!is_Array($tokendata)) {
+	            if (!is_array($tokendata)) {
 	                error($tokendata);
 	            }
 	            $token = token_name($tokendata[0]);
