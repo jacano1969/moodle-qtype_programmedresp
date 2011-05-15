@@ -301,16 +301,24 @@ function programmedresp_get_random_value($vardata) {
 
 /**
  * Returns the module in use
+ * @todo Improve the module detection
  * @return string
  */
 function programmedresp_get_modname() {
 
 	global $CFG;
 
-    $withoutmod = substr(str_replace($CFG->dirroot, '', $_SERVER['SCRIPT_FILENAME']), 5);       // The 5 is the /mod/
-    $modname = substr($withoutmod, 0, strpos($withoutmod, '/'));
+//    $withoutmod = substr(str_replace($CFG->dirroot, '', $_SERVER['SCRIPT_FILENAME']), 5);       // The 5 is the /mod/
+//    $modname = substr($withoutmod, 0, strpos($withoutmod, '/'));
+//
+//    return $modname;
 
-    return $modname;
+	if (strstr($_SERVER['SCRIPT_FILENAME'], 'guidedquiz') != false) {
+		return 'guidedquiz';
+	} else {
+		return 'quiz';
+	}
+	
 }
 
 
