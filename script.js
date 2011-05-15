@@ -79,11 +79,15 @@ function functionsection_visible() {
     
     var functionheader = document.getElementById("functionheader");
     var fakecaller = document.getElementById("id_programmedrespfid");
+    var categoriescaller = document.getElementById("id_functioncategory");
     
     // If it's hidden let's show it
     if (functionheader.style.visibility == "hidden" || functionheader.style.display == "none") {
         functionheader.style.visibility = "visible";
         functionheader.style.display = "inline";
+        
+        // It's not displayed directly from the form because we must avoid the select element validation
+    	display_functionslist(categoriescaller);
         
     // If there is a selected function reload the function arguments
     } else if (fakecaller) {

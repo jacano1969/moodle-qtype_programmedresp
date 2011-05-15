@@ -92,10 +92,10 @@ class question_edit_programmedresp_form extends question_edit_form {
         $catattrs['onchange'] = 'update_addfunctionurl();return display_functionslist(this);';
         $mform->addElement('select', 'functioncategory', get_string('functioncategory', 'qtype_programmedresp'), $catoptions, $catattrs);
         
-//        // Dirty hack to add the function (added later through ajax)
-//        if (empty($this->question->id)) {
-//            $mform->addElement('hidden', 'programmedrespfid');
-//        }
+        // Dirty hack to add the function (added later through ajax)
+        if (empty($this->question->id)) {
+            $mform->addElement('hidden', 'programmedrespfid');
+        }
         
         // Link to add a category
         if ($caneditfunctions) {
@@ -110,8 +110,6 @@ class question_edit_programmedresp_form extends question_edit_form {
         $mform->addElement('html', '<div id="id_functioncategory_content">');
         if (!empty($this->question->id)) {
         	$outputmanager->display_functionslist($this->programmedresp_f->programmedrespfcatid);
-        } else {
-        	$outputmanager->display_functionslist();
         }
         $mform->addElement('html', '</div>');
         
