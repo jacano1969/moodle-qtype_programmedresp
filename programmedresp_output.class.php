@@ -110,20 +110,19 @@ class programmedresp_output {
      * Prints a select with the category functions list
      * @param integer $categoryid
      */
-    function display_functionslist($categoryid) {
-
-        if (!$categoryid) {
-            die();
-        }
+    function display_functionslist($categoryid = false) {
         
-        $functions = get_records('question_programmedresp_f', 'programmedrespfcatid', $categoryid);
-        if (!$functions) {
-            $this->print_form_html(get_string('errornofunctions', 'qtype_programmedresp'));
-        }
+    	// Retrieving category functions
+    	if ($categoryid) {
+	        $functions = get_records('question_programmedresp_f', 'programmedrespfcatid', $categoryid);
+	        if (!$functions) {
+	            $this->print_form_html(get_string('errornofunctions', 'qtype_programmedresp'));
+	        }
+    	}
         
         // Functions
         $options = array('0' => ' ('.get_string("selectfunction", "qtype_programmedresp").') ');
-        if ($functions) {
+        if (!empty($functions)) {
 	        foreach ($functions as $function) {
 	            $options[$function->id] = $function->name;
 	        }

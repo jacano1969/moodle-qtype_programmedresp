@@ -24,9 +24,9 @@ require_js($CFG->wwwroot.'/question/type/programmedresp/script.js');
 print_header_simple(get_string($action, 'qtype_programmedresp'));
 
 // Adding wwwroot
-echo "<script type=\"text/javascript\">//<![CDATA[\n".
-    "var wwwroot = '".$CFG->wwwroot."';\n".
-    "//]]></script>\n";
+//echo "<script type=\"text/javascript\">//<![CDATA[\n".
+//    "var wwwroot = '".$CFG->wwwroot."';\n".
+//    "//]]></script>\n";
 
 switch ($action) {
 	
@@ -55,14 +55,14 @@ switch ($action) {
 				print_error('errordb', 'qtype_programmedresp');
 			}
 			
-			echo '<script type="text/javascript">';
-			echo 'add_to_parent("'.$catdata->id.'", "'.$catdata->name.'", "id_functioncategory", "'.$data->parent.'");';
-            echo 'opened = true;'; // We work with the opener window
-			echo 'var categorieselement = window.opener.document.getElementById("id_functioncategory");';
-			echo 'display_functionslist(categorieselement);';
-			echo 'update_addfunctionurl();';
-			echo 'window.close();';
-			echo '</script>';
+			echo "<script type=\"text/javascript\">//<![CDATA[\n".
+			     "var wwwroot = '".$CFG->wwwroot."';\n".
+			     "add_to_parent(\"".$catdata->id."\", \"".$catdata->name."\", \"id_functioncategory\", \"".$data->parent."\");\n".
+                 "opened = true;\n".
+			     "var categorieselement = window.opener.document.getElementById(\"id_functioncategory\");\n".
+			     "update_addfunctionurl();\n".
+			     "window.close();\n".
+			     "//]]></script>\n";
 			
 	    // Display form
 		} else {

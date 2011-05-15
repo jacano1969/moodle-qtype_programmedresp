@@ -138,7 +138,9 @@ function display_args(element) {
         }
     }
 
-    var questiontextvalue = get_questiontext().replace(questiontextregexpfilter, " ");
+    
+    var questiontextvalue = get_questiontext();
+    questiontextvalue = questiontextvalue.replace(questiontextregexpfilter, " ");
     
     // function id + question text to extract the vars + the concatenated vars created
     return display_section("action=displayargs&function=" + functionid + "&questiontext=" + questiontextvalue + concatstring);

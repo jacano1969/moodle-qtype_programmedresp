@@ -92,10 +92,10 @@ class question_edit_programmedresp_form extends question_edit_form {
         $catattrs['onchange'] = 'update_addfunctionurl();return display_functionslist(this);';
         $mform->addElement('select', 'functioncategory', get_string('functioncategory', 'qtype_programmedresp'), $catoptions, $catattrs);
         
-        // Dirty hack to add the function (added later through ajax)
-        if (empty($this->question->id)) {
-            $mform->addElement('hidden', 'programmedrespfid');
-        }
+//        // Dirty hack to add the function (added later through ajax)
+//        if (empty($this->question->id)) {
+//            $mform->addElement('hidden', 'programmedrespfid');
+//        }
         
         // Link to add a category
         if ($caneditfunctions) {
@@ -110,23 +110,25 @@ class question_edit_programmedresp_form extends question_edit_form {
         $mform->addElement('html', '<div id="id_functioncategory_content">');
         if (!empty($this->question->id)) {
         	$outputmanager->display_functionslist($this->programmedresp_f->programmedrespfcatid);
+        } else {
+        	$outputmanager->display_functionslist();
         }
         $mform->addElement('html', '</div>');
         
+    
         // Link to add a function
         if ($caneditfunctions) {
-	        $addfunctionsurl = $CFG->wwwroot.'/question/type/programmedresp/manage.php?action=addfunctions';
-	        
-	        // If it's a function edition we should add the selected category id
-	        if (!empty($this->question->id)) {
-	        	$addfunctionsurl .= '&fcatid='.$this->programmedresp_f->programmedrespfcatid;
-	        }
-	        
-	        $onclick = "window.open(this.href, this.target, 'menubar=0,location=0,scrollbars,resizable,width=650,height=600', true);return false;";
-	        $functionlink = '<a href="'.$addfunctionsurl.'" onclick="'.$onclick.'" target="addfunctions" id="id_addfunctionurl">'.get_string('addfunction', 'qtype_programmedresp').'</a>';
-	        $mform->addElement('html', '<div class="fitem"><div class="fitemtitle"></div><div class="felement">'.$functionlink.'<br/><br/></div></div>');
+            $addfunctionsurl = $CFG->wwwroot.'/question/type/programmedresp/manage.php?action=addfunctions';
+            
+            // If it's a function edition we should add the selected category id
+            if (!empty($this->question->id)) {
+                $addfunctionsurl .= '&fcatid='.$this->programmedresp_f->programmedrespfcatid;
+            }
+            
+            $onclick = "window.open(this.href, this.target, 'menubar=0,location=0,scrollbars,resizable,width=650,height=600', true);return false;";
+            $functionlink = '<a href="'.$addfunctionsurl.'" onclick="'.$onclick.'" target="addfunctions" id="id_addfunctionurl">'.get_string('addfunction', 'qtype_programmedresp').'</a>';
+            $mform->addElement('html', '<div class="fitem"><div class="fitemtitle"></div><div class="felement">'.$functionlink.'<br/><br/></div></div>');
         }
-        
         
         // Arguments
         $mform->addElement('html', '<div id="id_programmedrespfid_content">');

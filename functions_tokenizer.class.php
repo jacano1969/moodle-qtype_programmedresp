@@ -62,10 +62,10 @@ class functions_tokenizer {
 	                if ($token == 'T_FUNCTION') {
 	
 	                    
-	                    if (isset($functions[$i]->description) && isset($functions[$i]->params) && isset($functions[$i]->type) && 
-	                        isset($functions[$i]->nreturns) && isset($functions[$i]->results)) {
+//	                    if (isset($functions[$i]->description) && isset($functions[$i]->params) && isset($functions[$i]->type) && 
+//	                        isset($functions[$i]->nreturns) && isset($functions[$i]->results)) {
 	                        $j++;
-	                    }
+//	                    }
 	                        
 	                    // Set the function key
 	                    if (isset($functions[$i]->functioncode)) {
