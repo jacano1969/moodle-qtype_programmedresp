@@ -71,7 +71,7 @@ class functions_tokenizer {
 	                    if (isset($functions[$i]->functioncode)) {
 	                        $i++;
 	                    }
-	                    $functions[$i]->functioncode = $tokendata[1];
+	                    $functions[$i]->functioncode = $tokendata[1].' ';
 	                    $setfunctionname = true;
 	                    
 	                // Code
