@@ -73,7 +73,14 @@ switch ($action) {
 		
 	case 'addfunctions':
 		
-		$fcatid = required_param('fcatid', PARAM_INT);
+		$fcatid = optional_param('fcatid', false, PARAM_INT);
+		
+		if (!$fcatid) {
+			echo '<br/><br/>';
+			notify(get_string('firstselectcategory', 'qtype_programmedresp'));
+			die();
+		}
+		
 		$form = new programmedresp_addfunctions_form($CFG->wwwroot.'/question/type/programmedresp/manage.php', array('fcatid' => $fcatid));
         
         if ($form->is_cancelled()) {

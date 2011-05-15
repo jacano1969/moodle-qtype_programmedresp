@@ -45,6 +45,7 @@ $string['errornofunctions'] = 'No functions availables';
 $string['errornorandomvaluesdata'] = 'No values data';
 $string['errornovalidfunctions'] = 'No valid functions';
 $string['errorsyntax'] = 'Syntax error';
+$string['firstselectcategory'] = 'In order to insert functions you must select a category';
 $string['function'] = 'Function';
 $string['functionadded'] = 'Function $a added';
 $string['functionstextarea'] = 'Paste functions';

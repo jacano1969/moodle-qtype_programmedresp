@@ -45,6 +45,7 @@ $string['errornofunctions'] = 'No hay funciones disponibles';
 $string['errornorandomvaluesdata'] = 'No hay datos de los valores';
 $string['errornovalidfunctions'] = 'No hay funciones válidas';
 $string['errorsyntax'] = 'Error de sintaxis';
+$string['firstselectcategory'] = 'Antes de introducir funciones debes seleccionar una categoría';
 $string['function'] = 'Función';
 $string['functionadded'] = 'Función $a añadida';
 $string['functionstextarea'] = 'Pegar funciones';

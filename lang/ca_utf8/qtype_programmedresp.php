@@ -45,6 +45,7 @@ $string['errornofunctions'] = 'No hi ha funcions disponibles';
 $string['errornorandomvaluesdata'] = 'No es troba el valor aleatori';
 $string['errornovalidfunctions'] = 'No hi ha funcions vàlides';
 $string['errorsyntax'] = 'Error de sintaxis';
+$string['firstselectcategory'] = 'Abans d\'introduïr funcions s\'ha de seleccionar una categoria';
 $string['function'] = 'Funció';
 $string['functionadded'] = 'Funció $a afegida';
 $string['functionstextarea'] = 'Engantxa funcions';
