@@ -41,7 +41,7 @@ class functions_tokenizer {
 	        foreach ($tokens as $tokendata) {
 	            
 	            if (!is_array($tokendata) && isset($functions[$i]) && isset($functions[$i]->functioncode)) {
-	                $functions[$i]->functioncode .= $tokendata;
+	                $functions[$i]->functioncode .= $tokendata.' ';
 	                continue;
 	            } 
 	            

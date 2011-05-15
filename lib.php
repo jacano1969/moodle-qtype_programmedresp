@@ -144,8 +144,8 @@ function programmedresp_add_repository_function($functioncode) {
 	$cleanfunctioncode = str_replace(chr(10), '', $cleanfunctioncode);
 	$cleanfunctioncode = str_replace('\r', '', $cleanfunctioncode);
 	$cleanfunctioncode = str_replace('\n', '', $cleanfunctioncode);
-    $cleanfunctioncode = str_replace('    ', '', $cleanfunctioncode);
-    $cleanfunctioncode = str_replace('  ', '', $cleanfunctioncode);
+    $cleanfunctioncode = str_replace('    ', ' ', $cleanfunctioncode);
+    $cleanfunctioncode = str_replace('    ', ' ', $cleanfunctioncode);
 	
 	$fh = fopen($file, 'a+');
 	
