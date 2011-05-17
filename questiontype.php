@@ -332,9 +332,9 @@ class programmedresp_qtype extends default_questiontype {
         
         global $CFG;
 
-        if (!$state->attempt) {
-        	print_error('errorcantpreview', 'qtype_programmedresp');
-        }
+//        if (!$state->attempt) {
+//        	print_error('errorcantpreview', 'qtype_programmedresp');
+//        }
         
         // Getting the module name from thispageurl
         $modname = programmedresp_get_modname();
@@ -680,7 +680,7 @@ class programmedresp_qtype extends default_questiontype {
         $vars = get_records('question_programmedresp_var', 'programmedrespid', $programmedresp->id);
         
         // Executes the function and stores the result/s in $results var
-        $exec = '$results = @'.$function->name.'(';
+        $exec = '$results = '.$function->name.'(';
 
 
         $modname = programmedresp_get_modname();
