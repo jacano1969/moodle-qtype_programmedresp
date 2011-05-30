@@ -51,42 +51,44 @@ class programmedresp_output {
      */
     function display_vars($questiontext = false, $args = false, $displayfunctionbutton = true) {
 
+    	// If there aren't vars just notify it
         if (!$vars = programmedresp_get_question_vars($questiontext)) {
-        	$this->print_form_htmlraw('<span class="error">'.get_string('novars', 'qtype_programmedresp').'</span>');
-        	return false;
+        	$this->print_form_htmlraw('<span class="programmedresp_novars">'.get_string('novars', 'qtype_programmedresp').'</span>');
         }
         
         // The variables fields
         $fields = programmedresp_get_var_fields();
         $varattrs['onblur'] = 'check_numeric(this, \''.addslashes(get_string("nonumeric", "qtype_programmedresp")).'\');';
         
-        // Selectors for each match 
-        foreach ($vars as $varname) {
-
-            $this->print_form_title('<strong>'.get_string("var", "qtype_programmedresp").' '.$varname.'</strong>');
-            
-            foreach ($fields as $fieldkey => $title) {
-                $this->print_form_text($title, 'var_'.$fieldkey.'_'.$varname, '', $varattrs);
-            }
-            $this->print_form_spacer();
+        // Selectors for each match
+        if ($vars) { 
+	        foreach ($vars as $varname) {
+	
+	            $this->print_form_title('<strong>'.get_string("var", "qtype_programmedresp").' '.$varname.'</strong>');
+	            
+	            foreach ($fields as $fieldkey => $title) {
+	                $this->print_form_text($title, 'var_'.$fieldkey.'_'.$varname, '', $varattrs);
+	            }
+	            $this->print_form_spacer();
+	        }
+        
+	        // Concat vars
+	        $concatdiv = '<div id="id_concatvars">';
+	        
+	        // Restoring concat vars if updating and they exists
+	        if ($args) {
+	        	foreach ($args as $arg) {
+	        		if (PROGRAMMEDRESP_ARG_CONCAT == $arg->type) {
+	        			$concatdata = programmedresp_unserialize($arg->value);
+	        			$concatdiv.= $this->add_concat_var($concatdata->name, $vars, $concatdata->values, true);
+	        		}
+	        	}
+	        }
+	        
+	        $concatdiv.= '</div>';
+	        $this->print_form_html($concatdiv);
+	        $this->print_form_html('<a href="#" onclick="add_concat_var();return false;">'.get_string("addconcatvar", "qtype_programmedresp").'</a><br/><br/>');
         }
-        
-        // Concat vars
-        $concatdiv = '<div id="id_concatvars">';
-        
-        // Restoring concat vars if updating and they exists
-        if ($args) {
-        	foreach ($args as $arg) {
-        		if (PROGRAMMEDRESP_ARG_CONCAT == $arg->type) {
-        			$concatdata = programmedresp_unserialize($arg->value);
-        			$concatdiv.= $this->add_concat_var($concatdata->name, $vars, $concatdata->values, true);
-        		}
-        	}
-        }
-        
-        $concatdiv.= '</div>';
-        $this->print_form_html($concatdiv);
-        $this->print_form_html('<a href="#" onclick="add_concat_var();return false;">'.get_string("addconcatvar", "qtype_programmedresp").'</a><br/><br/>');
         
         // TODO: Add a check_maximum and check_minimum to ensure max > min
         
@@ -192,6 +194,10 @@ class programmedresp_output {
             $paramelement = '<select name="argtype_'.$key.'" onchange="change_argument_type(this, \''.$key.'\');">';
             foreach ($argtypes as $argid => $argname) {
             	
+            	if (!$questiontextvars && ($argname == 'variable' || $argname == 'concat')) {
+            		continue;
+            	}
+            	
             	// If there are previous data and it is the selected argument type: selected
             	$selectedstr = '';
             	if ($args && $args[$key]->type == $argid) {
@@ -239,28 +245,30 @@ class programmedresp_output {
             $paramelement.= '<input type="text" name="fixed_'.$key.'" id="id_argument_fixed_'.$key.'" value="'.$fixedvalue.'" class="'.$fixedclass.'"/>';
             
             // Variables
-            $paramelement.= '<select name="variable_'.$key.'" id="id_argument_variable_'.$key.'" class="'.$variableclass.'">';
-            foreach ($questiontextvars as $varname) {
-            	
-            	$selectedstr = '';
-            	if ($variablevalue == $varname) {
-            		$selectedstr = 'selected="selected"';
-            	}
-                $paramelement.= '<option value="'.$varname.'" '.$selectedstr.'>'.get_string("var", "qtype_programmedresp").' '.$varname.'</option>';
-            }
-            $paramelement.= '</select>';
+            if ($questiontextvars) {
+	            $paramelement.= '<select name="variable_'.$key.'" id="id_argument_variable_'.$key.'" class="'.$variableclass.'">';
+	            foreach ($questiontextvars as $varname) {
+	            	
+	            	$selectedstr = '';
+	            	if ($variablevalue == $varname) {
+	            		$selectedstr = 'selected="selected"';
+	            	}
+	                $paramelement.= '<option value="'.$varname.'" '.$selectedstr.'>'.get_string("var", "qtype_programmedresp").' '.$varname.'</option>';
+	            }
+	            $paramelement.= '</select>';
             
-            // Concat vars
-            $paramelement.= '<select name="concat_'.$key.'" id="id_argument_concat_'.$key.'" class="'.$concatclass.'">';
-            foreach ($concatvars as $varname) {
-            	
-            	$selectedstr = '';
-            	if ($concatvalue == $varname) {
-            		$selectedstr = 'selected="selected"';
-            	}
-            	$paramelement.= '<option value="'.$varname.'" '.$selectedstr.'>'.get_string("var", "qtype_programmedresp").' '.$varname.'</option>';
+	            // Concat vars
+	            $paramelement.= '<select name="concat_'.$key.'" id="id_argument_concat_'.$key.'" class="'.$concatclass.'">';
+	            foreach ($concatvars as $varname) {
+	            	
+	            	$selectedstr = '';
+	            	if ($concatvalue == $varname) {
+	            		$selectedstr = 'selected="selected"';
+	            	}
+	            	$paramelement.= '<option value="'.$varname.'" '.$selectedstr.'>'.get_string("var", "qtype_programmedresp").' '.$varname.'</option>';
+	            }
+	            $paramelement.= '</select>';
             }
-            $paramelement.= '</select>';
             
             // Guided quiz
             $paramelement.= '<span  id="id_argument_guidedquiz_'.$key.'" class="'.$guidedquizclass.'"></span><input type="hidden" name="guidedquiz_'.$key.'" value=""/>';

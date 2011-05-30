@@ -43,7 +43,7 @@ function get_next_concat_num() {
     return maxconcatnum;
 }
 
-function display_vars(element, novarsstring, edit, displayfunctionbutton) {
+function display_vars(element, edit, displayfunctionbutton) {
 
     callerelement = element;
 
@@ -62,12 +62,8 @@ function display_vars(element, novarsstring, edit, displayfunctionbutton) {
     
     var questiontextvalue = get_questiontext();
     
-    // If there aren't vars display a message
     if (!questiontextvalue) {
-        
-        var container = document.getElementById("id_vars_content");
-        container.innerHTML = '<span class="error">' + novarsstring + '</span>';
-        return false;
+        questiontextvalue = '';
     }
 
     // Stripping garbage, we only want vars as much as we can
@@ -144,6 +140,9 @@ function display_args(element) {
 
     
     var questiontextvalue = get_questiontext();
+    if (!questiontextvalue) {
+        questiontextvalue = '';
+    }
     questiontextvalue = questiontextvalue.replace(questiontextregexpfilter, " ");
     
     // function id + question text to extract the vars + the concatenated vars created

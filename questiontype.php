@@ -101,50 +101,56 @@ class programmedresp_qtype extends default_questiontype {
 
         $varmap = array();   // Maintains the varname -> varid relation
         
-        if (empty($question->vars) || empty($question->args) || empty($question->resps)) {
-            return false;
-        }
+//        if (empty($question->vars) || empty($question->args) || empty($question->resps)) {
+//            return false;
+//        }
         
         // Vars
-        foreach ($question->vars as $vardata) {
-
-            $var->programmedrespid = $programmedresp->id;
-            $var->varname = $vardata->varname;
-            $var->nvalues = $vardata->nvalues;
-            $var->maximum = $vardata->maximum;
-            $var->minimum = $vardata->minimum;
-            $var->valueincrement = $vardata->valueincrement;
-            if (!$varmap[$vardata->varname] = insert_record('question_programmedresp_var', $var)) {
-                print_error('errordb', 'qtype_programmedresp');
-            }
+        if (!empty($question->vars)) {
+	        foreach ($question->vars as $vardata) {
+	
+	            $var->programmedrespid = $programmedresp->id;
+	            $var->varname = $vardata->varname;
+	            $var->nvalues = $vardata->nvalues;
+	            $var->maximum = $vardata->maximum;
+	            $var->minimum = $vardata->minimum;
+	            $var->valueincrement = $vardata->valueincrement;
+	            if (!$varmap[$vardata->varname] = insert_record('question_programmedresp_var', $var)) {
+	                print_error('errordb', 'qtype_programmedresp');
+	            }
+	        }
         }
         
         // Args
-        foreach ($question->args as $argdata) {
-
-            $arg->programmedrespid = $programmedresp->id;
-            $arg->argkey = $argdata->argkey;
-            $arg->type = $argdata->type;
-            
-            // Getting the var id
-            if ($argdata->type == PROGRAMMEDRESP_ARG_VARIABLE) {
-                $argdata->value = $varmap[$argdata->value];
-            }
-            $arg->value = $argdata->value;
-            if (!insert_record('question_programmedresp_arg', $arg)) {
-                print_error('errordb', 'qtype_programmedresp');
-            }
+        if (!empty($question->args)) {
+	        foreach ($question->args as $argdata) {
+	
+	            $arg->programmedrespid = $programmedresp->id;
+	            $arg->argkey = $argdata->argkey;
+	            $arg->type = $argdata->type;
+	            
+	            // Getting the var id
+	            if ($argdata->type == PROGRAMMEDRESP_ARG_VARIABLE) {
+	                $argdata->value = $varmap[$argdata->value];
+	            }
+	            $arg->value = $argdata->value;
+	            if (!insert_record('question_programmedresp_arg', $arg)) {
+	                print_error('errordb', 'qtype_programmedresp');
+	            }
+	        }
         }
         
         // Resps
-        foreach ($question->resps as $respdata) {
-
-            $resp->programmedrespid = $programmedresp->id;
-            $resp->returnkey = $respdata->returnkey;
-            $resp->label = $respdata->label;
-            if (!insert_record('question_programmedresp_resp', $resp)) {
-                print_error('errordb', 'qtype_programmedresp');
-            }
+        if (!empty($question->resps)) {
+	        foreach ($question->resps as $respdata) {
+	
+	            $resp->programmedrespid = $programmedresp->id;
+	            $resp->returnkey = $respdata->returnkey;
+	            $resp->label = $respdata->label;
+	            if (!insert_record('question_programmedresp_resp', $resp)) {
+	                print_error('errordb', 'qtype_programmedresp');
+	            }
+	        }
         }
 
         return true;
@@ -199,67 +205,71 @@ class programmedresp_qtype extends default_questiontype {
         }
 
         // Inserting vars
-        if (!$vars || !$args) {
-            return false;
-        }
+//        if (!$vars || !$args) {
+//            return false;
+//        }
         
-        foreach ($vars as $varname => $var) {
-            $var->programmedrespid = $programmedresp->id;
-            $var->varname = $varname;
-            
-            // Update
-            if ($var->id = get_field('question_programmedresp_var', 'id', 'programmedrespid', $var->programmedrespid, 'varname', $var->varname)) {
-
-                if (!update_record('question_programmedresp_var', $var)) {
-                    print_error('errordb', 'qtype_programmedresp');
-                }
-                
-            // Insert
-            } else {
-                if (!$vars[$varname]->id = insert_record('question_programmedresp_var', $var)) {
-                    print_error('errordb', 'qtype_programmedresp');
-                }
-            }    
+        if ($vars) {
+	        foreach ($vars as $varname => $var) {
+	            $var->programmedrespid = $programmedresp->id;
+	            $var->varname = $varname;
+	            
+	            // Update
+	            if ($var->id = get_field('question_programmedresp_var', 'id', 'programmedrespid', $var->programmedrespid, 'varname', $var->varname)) {
+	
+	                if (!update_record('question_programmedresp_var', $var)) {
+	                    print_error('errordb', 'qtype_programmedresp');
+	                }
+	                
+	            // Insert
+	            } else {
+	                if (!$vars[$varname]->id = insert_record('question_programmedresp_var', $var)) {
+	                    print_error('errordb', 'qtype_programmedresp');
+	                }
+	            }    
+	        }
         }
 
-        
-        foreach ($args as $arg) {
-            
-            // If it's a variable we must look for the question_programmedresp_var identifier
-            if ($arg->type == PROGRAMMEDRESP_ARG_VARIABLE) {                
-                if (!isset($vars[$arg->value])) {
-                    print_error('errorcantfindvar', 'qtype_programmedresp', $arg->value);
-                }
-                $arg->value = $vars[$arg->value]->id;
-            }
-            
-            // If it's a concat var we must serialize the concatvar_N param
-            if ($arg->type == PROGRAMMEDRESP_ARG_CONCAT) {
-                
-                $concatnum = intval(substr($arg->value, 7));
-                if (!$concatvalues = optional_param('concatvar_'.$concatnum, false, PARAM_ALPHANUM)) {
-                    print_error('errorcantfindvar', 'qtype_programmedresp', $arg->value);
-                }
 
-                $concatobj = new stdClass();
-                $concatobj->name = 'concatvar_'.$concatnum;
-                $concatobj->values = $concatvalues;
-                $arg->value = programmedresp_serialize($concatobj);
-            }
-            
-            // Update
-            if ($arg->id = get_field('question_programmedresp_arg', 'id', 'programmedrespid', $arg->programmedrespid, 'argkey', $arg->argkey)) {
-
-                if (!update_record('question_programmedresp_arg', $arg)) {
-                    print_error('errordb', 'qtype_programmedresp');
-                }
-                
-            // Insert
-            } else {
-                if (!insert_record('question_programmedresp_arg', $arg)) {
-                    print_error('errordb', 'qtype_programmedresp');
-                }
-            }            
+        if ($args) {
+	        foreach ($args as $arg) {
+	            
+	            // If it's a variable we must look for the question_programmedresp_var identifier
+	            if ($arg->type == PROGRAMMEDRESP_ARG_VARIABLE) {                
+	                if (!isset($vars[$arg->value])) {
+	                    print_error('errorcantfindvar', 'qtype_programmedresp', $arg->value);
+	                }
+	                $arg->value = $vars[$arg->value]->id;
+	            }
+	            
+	            // If it's a concat var we must serialize the concatvar_N param
+	            if ($arg->type == PROGRAMMEDRESP_ARG_CONCAT) {
+	                
+	                $concatnum = intval(substr($arg->value, 7));
+	                if (!$concatvalues = optional_param('concatvar_'.$concatnum, false, PARAM_ALPHANUM)) {
+	                    print_error('errorcantfindvar', 'qtype_programmedresp', $arg->value);
+	                }
+	
+	                $concatobj = new stdClass();
+	                $concatobj->name = 'concatvar_'.$concatnum;
+	                $concatobj->values = $concatvalues;
+	                $arg->value = programmedresp_serialize($concatobj);
+	            }
+	            
+	            // Update
+	            if ($arg->id = get_field('question_programmedresp_arg', 'id', 'programmedrespid', $arg->programmedrespid, 'argkey', $arg->argkey)) {
+	
+	                if (!update_record('question_programmedresp_arg', $arg)) {
+	                    print_error('errordb', 'qtype_programmedresp');
+	                }
+	                
+	            // Insert
+	            } else {
+	                if (!insert_record('question_programmedresp_arg', $arg)) {
+	                    print_error('errordb', 'qtype_programmedresp');
+	                }
+	            }            
+	        }
         }
 
         return true;
@@ -350,22 +360,24 @@ class programmedresp_qtype extends default_questiontype {
         $questiontext = $this->format_text($question->questiontext, $question->questiontextformat, $cmoptions);
 
         // Replacing vars for random values
-        foreach ($question->options->vars as $var) {
-
-            // If this attempt doesn't have yet a value 
-            if (!$values = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $state->attempt, 'programmedrespvarid', $var->id, 'module', $modname)) {
-                
-                // Add a new random value
-                $values = $this->generate_value($state->attempt, $var, $modname);
-                if (is_null($values)) {
-                    print_error('errordb', 'qtype_programmedresp');
-                }
-            }
-            $values = programmedresp_unserialize($values);
-            
-            $valuetodisplay = implode(', ', $values);
-            
-            $questiontext = str_replace('{$'.$var->varname.'}', $valuetodisplay, $questiontext);
+        if (!empty($question->options->vars)) {
+	        foreach ($question->options->vars as $var) {
+	
+	            // If this attempt doesn't have yet a value 
+	            if (!$values = get_field('question_programmedresp_val', 'varvalues', 'attemptid', $state->attempt, 'programmedrespvarid', $var->id, 'module', $modname)) {
+	                
+	                // Add a new random value
+	                $values = $this->generate_value($state->attempt, $var, $modname);
+	                if (is_null($values)) {
+	                    print_error('errordb', 'qtype_programmedresp');
+	                }
+	            }
+	            $values = programmedresp_unserialize($values);
+	            
+	            $valuetodisplay = implode(', ', $values);
+	            
+	            $questiontext = str_replace('{$'.$var->varname.'}', $valuetodisplay, $questiontext);
+	        }
         }
         
         // Executes the selected function and returns the correct response/s
@@ -738,44 +750,50 @@ class programmedresp_qtype extends default_questiontype {
         
         // Vars
         fwrite($bf, start_tag('VARS', $level, true));
-        foreach ($vars as $var) {
-            
-            fwrite($bf, start_tag('VAR', $level + 1, true));
-            foreach ($this->exportvarfields as $field) {
-                fwrite($bf, full_tag(strtoupper($field), $level + 2, false, $var->$field));
-            }
-            fwrite($bf, end_tag('VAR', $level + 1, true));
-            $varsmap[$var->id] = $var->varname;
+        if ($vars) {
+	        foreach ($vars as $var) {
+	            
+	            fwrite($bf, start_tag('VAR', $level + 1, true));
+	            foreach ($this->exportvarfields as $field) {
+	                fwrite($bf, full_tag(strtoupper($field), $level + 2, false, $var->$field));
+	            }
+	            fwrite($bf, end_tag('VAR', $level + 1, true));
+	            $varsmap[$var->id] = $var->varname;
+	        }
         }
         fwrite($bf, end_tag('VARS', $level, true));
         
         // Args
         fwrite($bf, start_tag('ARGS', $level, true));
-        foreach ($args as $arg) {
-            
-            // Changing var id reference to varname
-            if ($arg->type == PROGRAMMEDRESP_ARG_VARIABLE) {
-                $arg->value = $varsmap[$arg->value];
-            }
-            
-            fwrite($bf, start_tag('ARG', $level + 1, true));
-            foreach ($this->exportargfields as $field) {
-                fwrite($bf, full_tag(strtoupper($field), $level + 2, false, $arg->$field));
-            }
-            fwrite($bf, end_tag('ARG', $level + 1, true));
+        if ($args) {
+	        foreach ($args as $arg) {
+	            
+	            // Changing var id reference to varname
+	            if ($arg->type == PROGRAMMEDRESP_ARG_VARIABLE) {
+	                $arg->value = $varsmap[$arg->value];
+	            }
+	            
+	            fwrite($bf, start_tag('ARG', $level + 1, true));
+	            foreach ($this->exportargfields as $field) {
+	                fwrite($bf, full_tag(strtoupper($field), $level + 2, false, $arg->$field));
+	            }
+	            fwrite($bf, end_tag('ARG', $level + 1, true));
+	        }
         }
         fwrite($bf, end_tag('ARGS', $level, true));
         
         
         // Resps
         fwrite($bf, start_tag('RESPS', $level, true));
-        foreach ($resps as $resp) {
-            
-            fwrite($bf, start_tag('RESP', $level + 1, true));
-            foreach ($this->exportrespfields as $field) {
-                fwrite($bf, full_tag(strtoupper($field), $level + 2, false, $resp->$field));
-            }
-            fwrite($bf, end_tag('RESP', $level + 1, true));
+        if ($resps) {
+	        foreach ($resps as $resp) {
+	            
+	            fwrite($bf, start_tag('RESP', $level + 1, true));
+	            foreach ($this->exportrespfields as $field) {
+	                fwrite($bf, full_tag(strtoupper($field), $level + 2, false, $resp->$field));
+	            }
+	            fwrite($bf, end_tag('RESP', $level + 1, true));
+	        }
         }
         fwrite($bf, end_tag('RESPS', $level, true));
         
@@ -808,45 +826,51 @@ class programmedresp_qtype extends default_questiontype {
         
         // Vars
         $var->programmedrespid = $programmedresp->id;
-        foreach ($info['#']['VARS'][0]['#']['VAR'] as $vardata) {
-            
-            foreach ($this->exportvarfields as $field) {
-                $var->$field = backup_todb($vardata['#'][strtoupper($field)][0]['#']);
-            }
-            if (!$varsmap[$var->varname] = insert_record('question_programmedresp_var', $var)) {
-                return false;
-            }
+        if ($info['#']['VARS'][0]['#']['VAR']) {
+	        foreach ($info['#']['VARS'][0]['#']['VAR'] as $vardata) {
+	            
+	            foreach ($this->exportvarfields as $field) {
+	                $var->$field = backup_todb($vardata['#'][strtoupper($field)][0]['#']);
+	            }
+	            if (!$varsmap[$var->varname] = insert_record('question_programmedresp_var', $var)) {
+	                return false;
+	            }
+	        }
         }
         
         // Args
         $arg->programmedrespid = $programmedresp->id;
-        foreach ($info['#']['ARGS'][0]['#']['ARG'] as $argdata) {
-        
-            $arg->argkey = backup_todb($argdata['#']['ARGKEY'][0]['#']);
-            $arg->type = backup_todb($argdata['#']['TYPE'][0]['#']);
-            $arg->value = backup_todb($argdata['#']['VALUE'][0]['#']);
-            
-            // Getting the var id
-            if ($arg->type == PROGRAMMEDRESP_ARG_VARIABLE) {
-                $argumentvar = get_record('question_programmedresp_var', 'programmedrespid', $programmedresp->id, 'varname', $arg->value, '', '', 'id');
-                $arg->value = $argumentvar->id;
-            }
-            
-            if (!insert_record('question_programmedresp_arg', $arg)) {
-                return false;
-            }
+        if ($info['#']['ARGS'][0]['#']['ARG']) {
+	        foreach ($info['#']['ARGS'][0]['#']['ARG'] as $argdata) {
+	        
+	            $arg->argkey = backup_todb($argdata['#']['ARGKEY'][0]['#']);
+	            $arg->type = backup_todb($argdata['#']['TYPE'][0]['#']);
+	            $arg->value = backup_todb($argdata['#']['VALUE'][0]['#']);
+	            
+	            // Getting the var id
+	            if ($arg->type == PROGRAMMEDRESP_ARG_VARIABLE) {
+	                $argumentvar = get_record('question_programmedresp_var', 'programmedrespid', $programmedresp->id, 'varname', $arg->value, '', '', 'id');
+	                $arg->value = $argumentvar->id;
+	            }
+	            
+	            if (!insert_record('question_programmedresp_arg', $arg)) {
+	                return false;
+	            }
+	        }
         }
 
         // Resps
         $resp->programmedrespid = $programmedresp->id;
-        foreach ($info['#']['RESPS'][0]['#']['RESP'] as $respdata) {
-
-            foreach ($this->exportrespfields as $field) {
-                $resp->$field = backup_todb($respdata['#'][strtoupper($field)][0]['#']);
-            }
-            if (!insert_record('question_programmedresp_resp', $resp)) {
-                return false;
-            }
+        if ($info['#']['RESPS'][0]['#']['RESP']) {
+	        foreach ($info['#']['RESPS'][0]['#']['RESP'] as $respdata) {
+	
+	            foreach ($this->exportrespfields as $field) {
+	                $resp->$field = backup_todb($respdata['#'][strtoupper($field)][0]['#']);
+	            }
+	            if (!insert_record('question_programmedresp_resp', $resp)) {
+	                return false;
+	            }
+	        }
         }
 
         // Function
@@ -905,41 +929,47 @@ class programmedresp_qtype extends default_questiontype {
         
         // Vars
         $xmlstring .= '    <vars>'.chr(13).chr(10);
-        foreach ($question->options->vars as $var) {
-            $xmlstring .= '      <var>'.chr(13).chr(10);
-            foreach ($this->exportvarfields as $field) {
-                $xmlstring .= '        <'.$field.'>'.$var->{$field}.'</'.$field.'>'.chr(13).chr(10);
-                
-                // Storing the varid => varname relation
-                $programmedrespvars[$var->id] = $var->varname;
-            }
-            $xmlstring .= '      </var>'.chr(13).chr(10);
+        if (!empty($question->options->vars)) {
+	        foreach ($question->options->vars as $var) {
+	            $xmlstring .= '      <var>'.chr(13).chr(10);
+	            foreach ($this->exportvarfields as $field) {
+	                $xmlstring .= '        <'.$field.'>'.$var->{$field}.'</'.$field.'>'.chr(13).chr(10);
+	                
+	                // Storing the varid => varname relation
+	                $programmedrespvars[$var->id] = $var->varname;
+	            }
+	            $xmlstring .= '      </var>'.chr(13).chr(10);
+	        }
         }
         $xmlstring .= '    </vars>'.chr(13).chr(10);
         
         // Args
         $xmlstring .= '    <args>'.chr(13).chr(10);
-        foreach ($question->options->args as $arg) {
-            $xmlstring .= '      <arg>'.chr(13).chr(10);
-            $xmlstring .= '        <argkey>'.$arg->argkey.'</argkey>'.chr(13).chr(10);
-            $xmlstring .= '        <type>'.$arg->type.'</type>'.chr(13).chr(10);
-            
-            // The reference to the var id should be changed for a varname reference 
-            if ($arg->type == PROGRAMMEDRESP_ARG_VARIABLE) {
-                $arg->value = $programmedrespvars[$arg->value];
-            }
-            $xmlstring .= '        <value>'.$arg->value.'</value>'.chr(13).chr(10);
-            $xmlstring .= '      </arg>'.chr(13).chr(10);
+        if (!empty($question->options->args)) {
+	        foreach ($question->options->args as $arg) {
+	            $xmlstring .= '      <arg>'.chr(13).chr(10);
+	            $xmlstring .= '        <argkey>'.$arg->argkey.'</argkey>'.chr(13).chr(10);
+	            $xmlstring .= '        <type>'.$arg->type.'</type>'.chr(13).chr(10);
+	            
+	            // The reference to the var id should be changed for a varname reference 
+	            if ($arg->type == PROGRAMMEDRESP_ARG_VARIABLE) {
+	                $arg->value = $programmedrespvars[$arg->value];
+	            }
+	            $xmlstring .= '        <value>'.$arg->value.'</value>'.chr(13).chr(10);
+	            $xmlstring .= '      </arg>'.chr(13).chr(10);
+	        }
         }
         $xmlstring .= '    </args>'.chr(13).chr(10);
         
         // Resps
         $xmlstring .= '    <resps>'.chr(13).chr(10);
-        foreach ($question->options->resps as $resp) {
-            $xmlstring .= '      <resp>'.chr(13).chr(10);
-            $xmlstring .= '        <returnkey>'.$resp->returnkey.'</returnkey>'.chr(13).chr(10);
-            $xmlstring .= '        <label>'.$format->writetext($resp->label, 4).'</label>'.chr(13).chr(10);
-            $xmlstring .= '      </resp>'.chr(13).chr(10);
+        if (!empty($question->options->resps)) {
+	        foreach ($question->options->resps as $resp) {
+	            $xmlstring .= '      <resp>'.chr(13).chr(10);
+	            $xmlstring .= '        <returnkey>'.$resp->returnkey.'</returnkey>'.chr(13).chr(10);
+	            $xmlstring .= '        <label>'.$format->writetext($resp->label, 4).'</label>'.chr(13).chr(10);
+	            $xmlstring .= '      </resp>'.chr(13).chr(10);
+	        }
         }
         $xmlstring .= '    </resps>'.chr(13).chr(10);
         
@@ -974,23 +1004,29 @@ class programmedresp_qtype extends default_questiontype {
         $qo = parent::import_from_xml($data, $question, $format, $extra);
         
         // Vars
-        foreach ($data['#']['vars'][0]['#']['var'] as $key => $vardata) {
-            foreach ($this->exportvarfields as $paramkey => $paramname) {
-                $qo->vars[$key]->{$paramname} = $vardata['#'][$paramname][0]['#'];
-            } 
+        if (!empty($data['#']['vars'][0]['#']['var'])) {
+	        foreach ($data['#']['vars'][0]['#']['var'] as $key => $vardata) {
+	            foreach ($this->exportvarfields as $paramkey => $paramname) {
+	                $qo->vars[$key]->{$paramname} = $vardata['#'][$paramname][0]['#'];
+	            } 
+	        }
         }
         
         // Args
-        foreach ($data['#']['args'][0]['#']['arg'] as $key => $argdata) {
-            foreach ($this->exportargfields as $paramkey => $paramname) {
-                $qo->args[$key]->{$paramname} = $argdata['#'][$paramname][0]['#'];
-            } 
+        if (!empty($data['#']['args'][0]['#']['arg'])) {
+	        foreach ($data['#']['args'][0]['#']['arg'] as $key => $argdata) {
+	            foreach ($this->exportargfields as $paramkey => $paramname) {
+	                $qo->args[$key]->{$paramname} = $argdata['#'][$paramname][0]['#'];
+	            } 
+	        }
         }
 
         // Resps
-        foreach ($data['#']['resps'][0]['#']['resp'] as $key => $respdata) {
-            $qo->resps[$key]->returnkey = $respdata['#']['returnkey'][0]['#'];
-            $qo->resps[$key]->label = $format->import_text($respdata['#']['label'][0]['#']['text']);
+        if (!empty($data['#']['resps'][0]['#']['resp'])) {
+	        foreach ($data['#']['resps'][0]['#']['resp'] as $key => $respdata) {
+	            $qo->resps[$key]->returnkey = $respdata['#']['returnkey'][0]['#'];
+	            $qo->resps[$key]->label = $format->import_text($respdata['#']['label'][0]['#']['text']);
+	        }
         }
 
         // Function

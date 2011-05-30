@@ -15,3 +15,7 @@ div.programmedresp_functiondescription {
     visibility: hidden;
     display: none;
 }
+
+.programmedresp_novars {
+    padding: 10px;
+}
