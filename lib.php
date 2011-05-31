@@ -332,3 +332,12 @@ function programmedresp_get_quizid($attemptid, $modname) {
 	return get_field($modname.'_attempts', 'quiz', 'uniqueid', $attemptid);
 }
 
+
+function programmedresp_is_numeric($response) {
+
+	if (!preg_match('/^[0-9]$/', $response) && !preg_match('/^[0-9]+\.[0-9]+$/', $response)) {
+        return false;
+	}
+
+    return true;
+}

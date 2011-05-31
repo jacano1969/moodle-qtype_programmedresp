@@ -626,7 +626,7 @@ class programmedresp_qtype extends default_questiontype {
         }
         
         // If it's not an integer nor a float it's a string
-        if (!preg_match('/^[0-9]$/', $response) && !preg_match('/^[0-9]+\.[0-9]+$/', $response)) {
+        if (!programmedresp_is_numeric($response)) {
             // It has been previoulsy tested strval() vs strval()
             return 0;
         }
@@ -713,6 +713,14 @@ class programmedresp_qtype extends default_questiontype {
             $results = array($results);
         }
 
+        // Show the correct response with the same number of decimals of tolerance
+        foreach ($results as $key => $result) {
+            if (programmedresp_is_numeric($result) && strstr($programmedresp->tolerance, '.') != false) {
+            	$tmp = explode('.', $programmedresp->tolerance);
+                $results[$key] = round($result, strlen($tmp[1]));
+            }
+        }
+        
         return $results;
     }
 

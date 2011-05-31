@@ -32,6 +32,15 @@ function xmldb_qtype_programmedresp_upgrade($oldversion=0) {
         $result = $result && drop_field($table, $field);
     }
 
+    if ($result && $oldversion < 2011053100) {
+
+        $table = new XMLDBTable('question_programmedresp');
+        $field = new XMLDBField('tolerance');
+        $field->setAttributes(XMLDB_TYPE_CHAR, '30', null, null, null, null, null, '0', 'tolerancetype');
+
+        $result = $result && change_field_type($table, $field, true, true);
+    }
+    
     return $result;
 }
 
