@@ -381,7 +381,7 @@ class programmedresp_qtype extends default_questiontype {
         }
         
         // Executes the selected function and returns the correct response/s
-        $correctresults = $this->get_correct_responses($question, $state);
+        $correctresults = $this->get_correct_responses_without_round($question, $state);
         
         // If theres are responses we add them
         if (!empty($question->options->resps)) {
@@ -462,7 +462,7 @@ class programmedresp_qtype extends default_questiontype {
         }
         
         // Executes the selected function and returns the correct response/s
-        $correctresults = $this->get_correct_responses($question, $state);
+        $correctresults = $this->get_correct_responses_without_round($question, $state);
 
         // Beginning with the max grade
         $state->raw_grade = $question->maxgrade;
@@ -675,7 +675,7 @@ class programmedresp_qtype extends default_questiontype {
      * @param $state
      * @return array Correct responses with format array('ARGNUM' => VALUE, ....)
      */
-    function get_correct_responses(&$question, &$state) {
+    function get_correct_responses_without_round(&$question, &$state) {
 
         global $CFG;
 
@@ -712,18 +712,31 @@ class programmedresp_qtype extends default_questiontype {
         if (!is_array($results)) {
             $results = array($results);
         }
-
-        // Show the correct response with the same number of decimals of tolerance
-        foreach ($results as $key => $result) {
-            if (programmedresp_is_numeric($result) && strstr($programmedresp->tolerance, '.') != false) {
-            	$tmp = explode('.', $programmedresp->tolerance);
-                $results[$key] = round($result, strlen($tmp[1]));
-            }
-        }
         
         return $results;
     }
 
+    
+    /**
+     * Common question engine interface
+     * 
+     * @uses get_correct_responses_without_round and applies the rounding
+     * @param unknown_type $question
+     * @param unknown_type $state
+     */
+    function get_correct_responses(&$question, &$state) {
+    
+    	$results = $this->get_correct_responses_without_round($question, $state);
+    	
+        // Show the correct response with the same number of decimals of tolerance
+        foreach ($results as $key => $result) {
+            $results[$key] = programmedresp_round($result, $programmedresp->tolerance);
+        }
+        
+        return $results;
+    }
+    
+    
     function get_all_responses(&$question, &$state) {
         return $state->responses;
     }
@@ -814,7 +827,7 @@ class programmedresp_qtype extends default_questiontype {
         }
         
         // Adding function code 
-        $functioncode = get_function_code($function->name);
+        $functioncode = programmedresp_get_function_code($function->name);
         fwrite($bf, full_tag('CODE', $level + 1, false, $functioncode));
         fwrite($bf, end_tag('FUNCTION', $level, true));
         
@@ -901,7 +914,7 @@ class programmedresp_qtype extends default_questiontype {
             
             
         // If the function already exists ensure that it is the same function 
-        } else if (rtrim(get_function_code($functionname)) != rtrim($functioncode)) {
+        } else if (rtrim(programmedresp_get_function_code($functionname)) != rtrim($functioncode)) {
             return false;
         }
         
@@ -993,7 +1006,7 @@ class programmedresp_qtype extends default_questiontype {
         }
         
         // Adding function code
-        $functioncode = get_function_code($function->name);
+        $functioncode = programmedresp_get_function_code($function->name);
         $xmlstring .= '      <code>'.$format->writetext($functioncode, 4).'</code>'.chr(13).chr(10);
         $xmlstring .= '    </function>'.chr(13).chr(10);
         
@@ -1062,7 +1075,7 @@ class programmedresp_qtype extends default_questiontype {
             
             
         // If the function already exists ensure that it is the same function 
-        } else if (rtrim(get_function_code($functionname)) != rtrim($functioncode)) {
+        } else if (rtrim(programmedresp_get_function_code($functionname)) != rtrim($functioncode)) {
             return false;
         }
         
