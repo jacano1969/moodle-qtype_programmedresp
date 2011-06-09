@@ -333,6 +333,11 @@ function programmedresp_get_quizid($attemptid, $modname) {
 }
 
 
+/**
+ * Taking into account the dots
+ * @param unknown_type $response
+ * @return boolean
+ */
 function programmedresp_is_numeric($response) {
 
 	if (!preg_match('/^[0-9]$/', $response) && !preg_match('/^[0-9]+\.[0-9]+$/', $response)) {
@@ -340,4 +345,19 @@ function programmedresp_is_numeric($response) {
 	}
 
     return true;
+}
+
+/**
+ * Uses the question tolerance to round the result
+ * @param unknown_type $result
+ * @param unknown_type $tolerance
+ */
+function programmedresp_round($result, $tolerance) {
+
+    if (programmedresp_is_numeric($result) && strstr($tolerance, '.') != false) {
+        $tmp = explode('.', $tolerance);
+        $result = round($result, strlen($tmp[1]));
+    }
+    
+    return $result;
 }
