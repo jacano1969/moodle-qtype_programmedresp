@@ -9,6 +9,7 @@
  */
 
 require_once($CFG->dirroot.'/question/type/programmedresp/lib.php');
+require_once($CFG->dataroot.'/qtype_programmedresp.php');
 
 /**
  * The Programmed response question class
@@ -679,9 +680,6 @@ class programmedresp_qtype extends default_questiontype {
 
         global $CFG;
 
-        // Programmed functions container
-        require_once($CFG->dataroot.'/qtype_programmedresp.php');
-
         // Get the function which calculates the response
         if (!$programmedresp = get_record('question_programmedresp', 'question', $state->question)) {
             return false;
@@ -726,6 +724,11 @@ class programmedresp_qtype extends default_questiontype {
      */
     function get_correct_responses(&$question, &$state) {
     
+        // Get the function which calculates the response
+        if (!$programmedresp = get_record('question_programmedresp', 'question', $state->question)) {
+            return false;
+        }
+        
     	$results = $this->get_correct_responses_without_round($question, $state);
     	
         // Show the correct response with the same number of decimals of tolerance
