@@ -246,7 +246,7 @@ class programmedresp_qtype extends default_questiontype {
 	            // If it's a concat var we must serialize the concatvar_N param
 	            if ($arg->type == PROGRAMMEDRESP_ARG_CONCAT) {
 	                
-	                $concatnum = intval(substr($arg->value, 7));
+	                $concatnum = intval(substr($arg->value, 10));
 	                if (!$concatvalues = optional_param('concatvar_'.$concatnum, false, PARAM_ALPHANUM)) {
 	                    print_error('errorcantfindvar', 'qtype_programmedresp', $arg->value);
 	                }
