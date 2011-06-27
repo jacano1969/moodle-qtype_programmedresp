@@ -48,8 +48,11 @@ class programmedresp_output {
     /**
      * Prints form elements for the question vars based on question->questiontext
      * @param string $questiontext
+     * @param array $args To restore the already added concat vars
+     * @param boolean $displayfunctionbutton True for programmedresp, false for guidedquiz
+     * @param array $quizconcatvars The already created guided quiz concat vars
      */
-    function display_vars($questiontext = false, $args = false, $displayfunctionbutton = true) {
+    function display_vars($questiontext = false, $args = false, $displayfunctionbutton = true, $quizconcatvars = false) {
 
     	// If there aren't vars just notify it
         if (!$vars = programmedresp_get_question_vars($questiontext)) {
@@ -79,9 +82,18 @@ class programmedresp_output {
 	        if ($args) {
 	        	foreach ($args as $arg) {
 	        		if (PROGRAMMEDRESP_ARG_CONCAT == $arg->type) {
-	        			$concatdata = programmedresp_unserialize($arg->value);
+	        			
+	        			$concatdata = programmedresp_get_concatvar_data($arg->value);
 	        			$concatdiv.= $this->add_concat_var($concatdata->name, $vars, $concatdata->values, true);
 	        		}
+	        	}
+	        }
+	        
+	        // Restoring the guided quiz concatenated vars
+	        if ($quizconcatvars) {
+	        	foreach ($quizconcatvars as $concatdata) {
+	        		$concatdata->values = programmedresp_unserialize($concatdata->vars);
+	        		$concatdiv.= $this->add_concat_var($concatdata->name, $vars, $concatdata->values, true);
 	        	}
 	        }
 	        
@@ -232,7 +244,7 @@ class programmedresp_output {
 	            	$variableclass = '';
 	            	
 	            } else if ($args[$key]->type == PROGRAMMEDRESP_ARG_CONCAT) {
-	            	$concatdata = programmedresp_unserialize($args[$key]->value);
+	            	$concatdata = programmedresp_get_concatvar_data($args[$key]->value);
 	            	$concatvalue = $concatdata->name;
 	            	$concatclass = '';
 	            	

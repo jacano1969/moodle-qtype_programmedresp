@@ -41,6 +41,7 @@ $string['errorfunctionsyntax'] = 'Wrong function syntax';
 $string['errorfunctionsuspicious'] = 'Suspicious code';
 $string['errorparsingfunctiondata'] = 'Error getting function data';
 $string['errornocategories'] = 'No categories availables';
+$string['errornoconcatvar'] = 'Concat var does not exists';
 $string['errornofunctions'] = 'No functions availables';
 $string['errornorandomvaluesdata'] = 'No values data';
 $string['errornovalidfunctions'] = 'No valid functions';

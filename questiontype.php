@@ -251,10 +251,23 @@ class programmedresp_qtype extends default_questiontype {
 	                    print_error('errorcantfindvar', 'qtype_programmedresp', $arg->value);
 	                }
 	
-	                $concatobj = new stdClass();
-	                $concatobj->name = 'concatvar_'.$concatnum;
-	                $concatobj->values = $concatvalues;
-	                $arg->value = programmedresp_serialize($concatobj);
+	                // Inserting/Updating the new concat var
+	                $concatvarname = 'concatvar_'.$concatnum;
+	                if (!$concatobj = get_record('question_programmedresp_conc', 'origin', 'question', 'instanceid', $programmedresp->id, 'name', $concatvarname)) {
+	                	$concatobj = new stdClass();
+	                	$concatobj->origin = 'question';
+	                	$concatobj->instanceid = $programmedresp->id;
+	                	$concatobj->name = $concatvarname;
+	                	$concatobj->vars = programmedresp_serialize($concatvalues);
+                        if ($concatobj->id = insert_record('question_programmedresp_conc', $concatobj)) {
+                            print_error('errordb', 'qtype_programmedresp');
+                        }
+	                } else {
+	                    $concatobj->vars = programmedresp_serialize($concatvalues);
+                        update_record('question_programmedresp_conc', $concatobj);
+	                }
+	                
+	                $arg->value = $concatobj->id;
 	            }
 	            
 	            // Update
@@ -542,8 +555,8 @@ class programmedresp_qtype extends default_questiontype {
                 
             case PROGRAMMEDRESP_ARG_CONCAT: 
                 
-                $concatdata = programmedresp_unserialize($arg->value);
-                
+            	$concatdata = programmedresp_get_concatvar_data($arg->value);
+            	
                 // To store the concatenated vars
                 $randomvalues = array();
 
@@ -571,21 +584,49 @@ class programmedresp_qtype extends default_questiontype {
                 
             case PROGRAMMEDRESP_ARG_GUIDEDQUIZ:
                 
-                $sql = "SELECT gv.varvalues FROM {$CFG->prefix}guidedquiz_val gv 
-                        JOIN {$CFG->prefix}guidedquiz_var_arg gva ON gv.guidedquizvarid = gva.guidedquizvarid  
-                        WHERE gva.quizid = '$quizid' AND gva.programmedrespargid = '{$arg->id}' AND gv.attemptid = '$attemptid'";
-
-                $vardata = get_record_sql($sql);
-                
-                if (!$vardata) {
+            	// Getting the argument variable
+            	$sql = "SELECT * FROM {$CFG->prefix}guidedquiz_var_arg gva 
+            	        WHERE gva.quizid = '$quizid' AND gva.programmedrespargid = '{$arg->id}'";
+            	
+            	if (!$vardata = get_record_sql($sql)) {
                     print_error('errorargumentnoassigned', 'qtype_programmedresp');
-                }
-                $randomvalues = programmedresp_unserialize($vardata->varvalues);
+            	}
+            	
+            	// To store the values
+            	$randomvalues = array();
+            	
+            	// A var
+            	if ($vardata->type == 'var') {
+            		$random = get_field('guidedquiz_val', 'varvalues', 'guidedquizvarid', $vardata->instanceid, 'attemptid', $attemptid);
+            		$randomvalues = programmedresp_unserialize($random);
+
+                // A concat var
+            	} else {
+
+            		$var = get_record('question_programmedresp_conc', 'id', $vardata->instanceid);
+                    if (!$var) {
+                        print_error('errorargumentnoassigned', 'qtype_programmedresp');
+                    }
+                    
+                    // Adding each concatenated variable to $randomvalues
+                    $varnames = programmedresp_unserialize($var->vars);
+                    foreach ($varnames as $varname) {
+                    	
+                    	// Getting the var id
+                    	$varid = get_field('guidedquiz_var', 'id', 'quizid', $quizid, 'varname', $varname);
+                    	
+                    	$random = get_field('guidedquiz_val', 'varvalues', 'guidedquizvarid', $varid, 'attemptid', $attemptid);
+                        if (!$random) {
+                            print_error('errornorandomvaluesdata', 'qtype_programmedresp');
+                        }
+                        
+                    	$randomvalues = array_merge($randomvalues, programmedresp_unserialize($random));
+                    }
+            	}
 
                 break;
         }
-        
-    
+
         // If 1 is the array size the param type is an integer|float
         if (count($randomvalues) == 1) {
             $value = $randomvalues[0];
@@ -1078,6 +1119,7 @@ class programmedresp_qtype extends default_questiontype {
             
             
         // If the function already exists ensure that it is the same function 
+        // TODO: Improve checking (number of chars for example)
         } else if (rtrim(programmedresp_get_function_code($functionname)) != rtrim($functioncode)) {
             return false;
         }

@@ -63,7 +63,7 @@ function programmedresp_get_concat_vars($args = false) {
 		foreach ($args as $arg) {
 			
 			if (PROGRAMMEDRESP_ARG_CONCAT == $arg->type) {
-				$concatdata = programmedresp_unserialize($arg->value);
+				$concatdata = programmedresp_get_concatvar_data($arg->value);
 				$concatvars[$concatdata->name] = $concatdata->name;
 			}
 		}
@@ -71,6 +71,7 @@ function programmedresp_get_concat_vars($args = false) {
     // If there aren't args search on _GET
 	} else {
 		
+		// TODO: Change this silly iteration
 		// I hope 50 will be ok...
 		for ($concatnum = 0; $concatnum < 50; $concatnum++) {
 			
@@ -82,6 +83,26 @@ function programmedresp_get_concat_vars($args = false) {
 	}
 	
 	return $concatvars;
+}
+
+
+/**
+ * 
+ * @param integer $id
+ * @return The concat var data: name, referenced vars...
+ */
+function programmedresp_get_concatvar_data($id) {
+
+	$data = get_record('question_programmedresp_conc', 'id', $id);
+	if (!$data) {
+		print_error('errornoconcatvar', 'qtype_programmedresp');
+	}
+	
+	// "values" is a reserved DB field
+	$data->values = programmedresp_unserialize($data->vars);
+	unset($data->vars); // Just in case
+	
+	return $data;
 }
 
 
@@ -283,14 +304,19 @@ function programmedresp_unserialize($var) {
 /**
  * Gets random value/s
  * 
- * @param unknown_type $vardata
+ * @param object $vardata
  * @return array Values array, array with size = 1 if there is a single value 
  */
 function programmedresp_get_random_value($vardata) {
         
     $values = array();
     for ($i = 0; $i < $vardata->nvalues; $i++) {
-            
+
+    	if ($vardata->valueincrement == 0) {
+    		$values[] = $vardata->minimum;
+    		continue;
+    	}
+    	
         $differentincrements = round(($vardata->maximum - $vardata->minimum) / $vardata->valueincrement);
         $values[] = $vardata->minimum + (rand(0, $differentincrements) * $vardata->valueincrement);
     }

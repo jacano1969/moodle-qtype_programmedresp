@@ -161,12 +161,13 @@ class question_edit_programmedresp_form extends question_edit_form {
 
     		// Variables
     		$varfields = programmedresp_get_var_fields();
-    		foreach ($this->programmedresp_vars as $var) {
-    			
-    			foreach ($varfields as $varfield => $fielddesc) {
-    				$fieldname = 'var_'.$varfield.'_'.$var->varname;
-    				$question->{$fieldname} = $var->{$varfield};
-    			}
+    		if ($this->programmedresp_vars) {
+    		    foreach ($this->programmedresp_vars as $var) {
+    			    foreach ($varfields as $varfield => $fielddesc) {
+    				    $fieldname = 'var_'.$varfield.'_'.$var->varname;
+    				    $question->{$fieldname} = $var->{$varfield};
+    			    }
+    		    }
     		}
     		
 	    	// Function and function category

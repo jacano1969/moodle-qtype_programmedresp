@@ -41,6 +41,7 @@ $string['errorfunctionsyntax'] = 'Sintaxis de la función errónea';
 $string['errorfunctionsuspicious'] = 'Código sospechoso';
 $string['errorparsingfunctiondata'] = 'Error al obtener los datos de la función';
 $string['errornocategories'] = 'No hay categorías disponibles';
+$string['errornoconcatvar'] = 'No existe la variable concatenada';
 $string['errornofunctions'] = 'No hay funciones disponibles';
 $string['errornorandomvaluesdata'] = 'No hay datos de los valores';
 $string['errornovalidfunctions'] = 'No hay funciones válidas';
