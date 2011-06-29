@@ -236,7 +236,7 @@ function programmedresp_get_function_code($functionname) {
     // Look for the function end
     $functionend = 'function ';
     $partend = explode($functionend, $parts[1]);
-    notify(count($partend));
+    
     if (count($partend) < 2) {
     	return false;
     }
