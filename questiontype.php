@@ -1094,7 +1094,7 @@ class programmedresp_qtype extends default_questiontype {
         
         // Adding function code
         $functioncode = programmedresp_get_function_code($function->name);
-notify('a:'.$functioncode);
+
         $xmlstring .= '      <code>'.$functioncode.'</code>'.chr(13).chr(10);
         $xmlstring .= '    </function>'.chr(13).chr(10);
         
