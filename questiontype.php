@@ -107,7 +107,7 @@ class programmedresp_qtype extends default_questiontype {
 //        if (empty($question->vars) || empty($question->args) || empty($question->resps)) {
 //            return false;
 //        }
-        
+
         // Vars
         if (!empty($question->vars)) {
 	        foreach ($question->vars as $vardata) {
@@ -132,12 +132,12 @@ class programmedresp_qtype extends default_questiontype {
                 $var->instanceid = $programmedresp->id;
                 $var->name = $vardata->name;
                 $var->vars = $vardata->vars;
-                if (!$varmap[$vardata->name] = insert_record('question_programmedresp_conc', $var)) {
+                if (!$concatvarmap[$vardata->name] = insert_record('question_programmedresp_conc', $var)) {
                     print_error('errordb', 'qtype_programmedresp');
                 }
             }
         }
-        
+
         // Args
         if (!empty($question->args)) {
 	        foreach ($question->args as $argdata) {
@@ -231,7 +231,7 @@ class programmedresp_qtype extends default_questiontype {
 //            return false;
 //        }
         
-        if ($vars) {
+        if (!empty($vars)) {
 	        foreach ($vars as $varname => $var) {
 	            $var->programmedrespid = $programmedresp->id;
 	            $var->varname = $varname;
@@ -1122,8 +1122,8 @@ class programmedresp_qtype extends default_questiontype {
         }
         
         // Concat vars
-        if (!empty($data['#']['concatvars'][0]['#']['var'])) {
-            foreach ($data['#']['concatvars'][0]['#']['var'] as $key => $vardata) {
+        if (!empty($data['#']['concatvars'][0]['#']['concatvar'])) {
+            foreach ($data['#']['concatvars'][0]['#']['concatvar'] as $key => $vardata) {
                 foreach ($this->exportconcatvarfields as $paramkey => $paramname) {
                     $qo->concatvars[$key]->{$paramname} = $vardata['#'][$paramname][0]['#'];
                 } 
@@ -1149,7 +1149,8 @@ class programmedresp_qtype extends default_questiontype {
 
         // Function
         $functionname = $data['#']['function'][0]['#']['name'][0]['#'];
-        $functioncode = $format->import_text($data['#']['function'][0]['#']['code'][0]['#']['text']);
+
+        $functioncode = $data['#']['function'][0]['#']['code'][0]['#'];
         if (!$function = get_record('question_programmedresp_f', 'name', $functionname)) {
 
             foreach ($this->exportfunctionfields as $field) {
