@@ -207,35 +207,46 @@ function programmedresp_add_child_categories($parentid, &$catoptions, $categorie
     
 /**
  * Returns the function code
+ * @todo Improve it!!!!
  * @param object $function programmedresp_f
  * @return string
  */
 function programmedresp_get_function_code($functionname) {
     global $CFG;
-       
-    $fh = fopen($CFG->dataroot.'/qtype_programmedresp.php', 'r');
-            
-    if (!$fh) {
-        print_error('errorcantaccessfile', 'qtype_programmedresp');
+
+    // Getting all the file
+    if (!$filecode = file_get_contents($CFG->dataroot.'/qtype_programmedresp.php')) {
+    	print_error('errorcantaccessfile', 'qtype_programmedresp');
     }
-        
+    
+    // Cleaning the code
+    $filecode = str_replace('<?php', '', $filecode);
+    while (strstr($filecode, '  ') != false) {
+    	$filecode = str_replace('  ', ' ', $filecode);
+    }
+    
     // The function file line must begin with this
     $searchedstring = 'function '.$functionname;
-       
-    // Until end of file or function found
-    while (($line = fgets($fh, 4096)) !== false && empty($code)) {
-            
-        // If the line beginning matches the searched string
-        if (strstr(substr($line, 0, strlen($searchedstring)), $searchedstring) != false) {
-            $code = $line;
-        }
+    
+    $parts = explode($searchedstring, $filecode);
+    if (count($parts) < 2) {
+    	return false;
     }
-    fclose($fh);
-        
+    
+    // Look for the function end
+    $functionend = 'function ';
+    $partend = explode($functionend, $parts[1]);
+    notify(count($partend));
+    if (count($partend) < 2) {
+    	return false;
+    }
+    
+    $code = $searchedstring.' '.$partend[0];
+    
     if (empty($code)) {
         return false;
     }
-        
+
     return $code;
 }
 

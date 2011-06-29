@@ -25,6 +25,7 @@ class programmedresp_qtype extends default_questiontype {
     var $programmedrespfields = array('programmedrespfid', 'tolerancetype', 'tolerance');
     
     var $exportvarfields = array('varname', 'nvalues', 'maximum', 'minimum', 'valueincrement');
+    var $exportconcatvarfields = array('origin', 'name', 'vars');
     var $exportargfields = array('argkey', 'type', 'value');
     var $exportrespfields = array('returnkey', 'label');
     var $exportfunctionfields = array('name', 'description', 'nreturns', 'params', 'results');
@@ -56,6 +57,7 @@ class programmedresp_qtype extends default_questiontype {
         $question->options->vars = get_records('question_programmedresp_var', 'programmedrespid', $question->options->programmedresp->id);
         $question->options->args = get_records('question_programmedresp_arg', 'programmedrespid', $question->options->programmedresp->id);
         $question->options->resps = get_records('question_programmedresp_resp', 'programmedrespid', $question->options->programmedresp->id, 'returnkey ASC', 'returnkey, label');
+        $question->options->concatvars = get_records_select('question_programmedresp_conc', "origin = 'question' AND instanceid = '{$question->options->programmedresp->id}'");
         
         $question->options->function = get_record('question_programmedresp_f', 'id', $question->options->programmedresp->programmedrespfid);
         if (!$question->options->function) {
@@ -121,6 +123,20 @@ class programmedresp_qtype extends default_questiontype {
 	            }
 	        }
         }
+    
+        // Concat vars
+        if (!empty($question->concatvars)) {
+            foreach ($question->concatvars as $vardata) {
+    
+                $var->origin = $vardata->name;
+                $var->instanceid = $programmedresp->id;
+                $var->name = $vardata->name;
+                $var->vars = $vardata->vars;
+                if (!$varmap[$vardata->name] = insert_record('question_programmedresp_conc', $var)) {
+                    print_error('errordb', 'qtype_programmedresp');
+                }
+            }
+        }
         
         // Args
         if (!empty($question->args)) {
@@ -133,7 +149,12 @@ class programmedresp_qtype extends default_questiontype {
 	            // Getting the var id
 	            if ($argdata->type == PROGRAMMEDRESP_ARG_VARIABLE) {
 	                $argdata->value = $varmap[$argdata->value];
+	                
+	            // Getting the concat var id
+	            } else if ($argdata->type == PROGRAMMEDRESP_ARG_CONCAT) {
+	            	$argdata->value = $concatvarmap[$argdata->value];
 	            }
+	            
 	            $arg->value = $argdata->value;
 	            if (!insert_record('question_programmedresp_arg', $arg)) {
 	                print_error('errordb', 'qtype_programmedresp');
@@ -259,7 +280,7 @@ class programmedresp_qtype extends default_questiontype {
 	                	$concatobj->instanceid = $programmedresp->id;
 	                	$concatobj->name = $concatvarname;
 	                	$concatobj->vars = programmedresp_serialize($concatvalues);
-                        if ($concatobj->id = insert_record('question_programmedresp_conc', $concatobj)) {
+                        if (!$concatobj->id = insert_record('question_programmedresp_conc', $concatobj)) {
                             print_error('errordb', 'qtype_programmedresp');
                         }
 	                } else {
@@ -313,6 +334,7 @@ class programmedresp_qtype extends default_questiontype {
         }
         
         delete_records('question_programmedresp_var', 'programmedrespid', $programmedresp->id);
+        delete_records('question_programmedresp_conc', 'origin', 'question', 'instanceid', $programmedresp->id);
         delete_records('question_programmedresp', 'question', $questionid);
         
         return true;
@@ -1007,6 +1029,22 @@ class programmedresp_qtype extends default_questiontype {
 	        }
         }
         $xmlstring .= '    </vars>'.chr(13).chr(10);
+
+        // Concat vars
+        if (!empty($question->options->concatvars)) {
+            $xmlstring .= '    <concatvars>'.chr(13).chr(10);
+            foreach ($question->options->concatvars as $var) {
+                $xmlstring .= '      <concatvar>'.chr(13).chr(10);
+                foreach ($this->exportconcatvarfields as $field) {
+                    $xmlstring .= '        <'.$field.'>'.$var->{$field}.'</'.$field.'>'.chr(13).chr(10);
+                    
+                    // Storing the varid => concatvarname relation
+                    $programmedrespconcatvars[$var->id] = $var->name;
+                }
+                $xmlstring .= '      </concatvar>'.chr(13).chr(10);
+            }
+            $xmlstring .= '    </concatvars>'.chr(13).chr(10);
+        }
         
         // Args
         $xmlstring .= '    <args>'.chr(13).chr(10);
@@ -1019,7 +1057,12 @@ class programmedresp_qtype extends default_questiontype {
 	            // The reference to the var id should be changed for a varname reference 
 	            if ($arg->type == PROGRAMMEDRESP_ARG_VARIABLE) {
 	                $arg->value = $programmedrespvars[$arg->value];
+	                
+	            // The reference to the concat var id should be changed for it's var name
+	            } else if ($arg->type == PROGRAMMEDRESP_ARG_CONCAT) {
+	            	$arg->value = $programmedrespconcatvars[$arg->value];
 	            }
+	            
 	            $xmlstring .= '        <value>'.$arg->value.'</value>'.chr(13).chr(10);
 	            $xmlstring .= '      </arg>'.chr(13).chr(10);
 	        }
@@ -1051,7 +1094,8 @@ class programmedresp_qtype extends default_questiontype {
         
         // Adding function code
         $functioncode = programmedresp_get_function_code($function->name);
-        $xmlstring .= '      <code>'.$format->writetext($functioncode, 4).'</code>'.chr(13).chr(10);
+notify('a:'.$functioncode);
+        $xmlstring .= '      <code>'.$functioncode.'</code>'.chr(13).chr(10);
         $xmlstring .= '    </function>'.chr(13).chr(10);
         
         return $xmlstring;
@@ -1075,6 +1119,15 @@ class programmedresp_qtype extends default_questiontype {
 	                $qo->vars[$key]->{$paramname} = $vardata['#'][$paramname][0]['#'];
 	            } 
 	        }
+        }
+        
+        // Concat vars
+        if (!empty($data['#']['concatvars'][0]['#']['var'])) {
+            foreach ($data['#']['concatvars'][0]['#']['var'] as $key => $vardata) {
+                foreach ($this->exportconcatvarfields as $paramkey => $paramname) {
+                    $qo->concatvars[$key]->{$paramname} = $vardata['#'][$paramname][0]['#'];
+                } 
+            }
         }
         
         // Args
