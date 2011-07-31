@@ -226,7 +226,7 @@ function programmedresp_get_function_code($functionname) {
     }
     
     // The function file line must begin with this
-    $searchedstring = 'function '.$functionname;
+    $searchedstring = 'function '.$functionname.' (';
     
     $parts = explode($searchedstring, $filecode);
     if (count($parts) < 2) {
