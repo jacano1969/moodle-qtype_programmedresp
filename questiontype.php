@@ -831,9 +831,9 @@ class programmedresp_qtype extends default_questiontype {
         $args = get_records('question_programmedresp_arg', 'programmedrespid', $programmedresp->id);
         $resps = get_records('question_programmedresp_resp', 'programmedrespid', $programmedresp->id);
         
-        if (!$vars || !$args || !$resps) {
-            return false;
-        }
+//        if (!$vars || !$args || !$resps) {
+//            return false;
+//        }
         
         // Vars
         fwrite($bf, start_tag('VARS', $level, true));
@@ -938,7 +938,7 @@ class programmedresp_qtype extends default_questiontype {
         
         // Vars
         $var->programmedrespid = $programmedresp->id;
-        if ($info['#']['VARS'][0]['#']['VAR']) {
+        if (!empty($info['#']['VARS'])) {
 	        foreach ($info['#']['VARS'][0]['#']['VAR'] as $vardata) {
 	            
 	            foreach ($this->exportvarfields as $field) {
@@ -984,7 +984,7 @@ class programmedresp_qtype extends default_questiontype {
         		foreach ($this->exportconcatvarfields as $field) {
         			$concat->$field = backup_todb($concatvardata['#'][strtoupper($field)][0]['#']);
         		}
-                $concat->instance = $programmedresp->id;
+                $concat->instanceid = $programmedresp->id;
         		if (!$newid = insert_record('question_programmedresp_conc', $concat)) {
         			$status = false;
         			continue;
