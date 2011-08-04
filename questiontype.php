@@ -851,6 +851,7 @@ class programmedresp_qtype extends default_questiontype {
         fwrite($bf, end_tag('VARS', $level, true));
         
         // Args
+        $concatvars = array();
         fwrite($bf, start_tag('ARGS', $level, true));
         if ($args) {
 	        foreach ($args as $arg) {
@@ -865,10 +866,34 @@ class programmedresp_qtype extends default_questiontype {
 	                fwrite($bf, full_tag(strtoupper($field), $level + 2, false, $arg->$field));
 	            }
 	            fwrite($bf, end_tag('ARG', $level + 1, true));
+	            
+	            // If it's a concatvar backup it
+	            if ($arg->type == PROGRAMMEDRESP_ARG_CONCAT) {
+	               $concatvars[$arg->value] = $arg->value;
+	            }
 	        }
         }
         fwrite($bf, end_tag('ARGS', $level, true));
         
+        // Concat vars
+        if (!empty($concatvars)) {
+        	fwrite($bf, start_tag('CONCATVARS', $level, true));
+        	foreach ($concatvars as $concatid) {
+
+                if (!$concatvar = get_record('question_programmedresp_conc', 'id', $concatid)) {
+                	$status = false;
+                }
+
+                fwrite($bf, start_tag('CONCATVAR', $level + 1, true));
+                // Adding the id to map when restoring
+                fwrite($bf, full_tag('ID', $level + 2, false, $concatvar->id));
+        		foreach ($this->exportconcatvarfields as $field) {
+        			fwrite($bf, full_tag(strtoupper($field), $level + 2, false, $concatvar->$field));
+        		}
+        		fwrite($bf, end_tag('CONCATVAR', $level + 1, true));
+        	}
+        	fwrite($bf, end_tag('CONCATVARS', $level, true));
+        }
         
         // Resps
         fwrite($bf, start_tag('RESPS', $level, true));
@@ -940,12 +965,43 @@ class programmedresp_qtype extends default_questiontype {
 	                $arg->value = $argumentvar->id;
 	            }
 	            
-	            if (!insert_record('question_programmedresp_arg', $arg)) {
+	            if (!$argnewid = insert_record('question_programmedresp_arg', $arg)) {
 	                return false;
+	            }
+	            
+	            // If it's a concat var we must maintain the mapping between arg and concat var
+	            // to update argument->value
+	            if ($arg->type == PROGRAMMEDRESP_ARG_CONCAT) {
+	            	$argconcatmapping[$arg->value] = $argnewid;
 	            }
 	        }
         }
 
+        // Concat vars
+        if (!empty($info['#']['CONCATVARS'])) {
+        	foreach ($info['#']['CONCATVARS'][0]['#']['CONCATVAR'] as $concatvardata) {
+        		
+        		foreach ($this->exportconcatvarfields as $field) {
+        			$concat->$field = backup_todb($concatvardata['#'][strtoupper($field)][0]['#']);
+        		}
+                $concat->instance = $programmedresp->id;
+        		if (!$newid = insert_record('question_programmedresp_conc', $concat)) {
+        			$status = false;
+        			continue;
+        		}
+        		
+        		// Updating the argument which uses the concatvar
+        		$oldid = backup_todb($concatvardata['#']['ID'][0]['#']);
+        		if (empty($argconcatmapping[$oldid])) {
+        			$status = false;
+        			continue;
+        		}
+        		$concatarg = get_record('question_programmedresp_arg', 'id', $argconcatmapping[$oldid]);
+        		$concatarg->value = $newid;
+        		update_record('question_programmedresp_arg', $concatarg);
+        	}
+        }
+        
         // Resps
         $resp->programmedrespid = $programmedresp->id;
         if ($info['#']['RESPS'][0]['#']['RESP']) {
