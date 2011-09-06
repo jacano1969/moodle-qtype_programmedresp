@@ -377,7 +377,7 @@ function programmedresp_get_quizid($attemptid, $modname) {
  */
 function programmedresp_is_numeric($response) {
 
-	if (!preg_match('/^[0-9]$/', $response) && !preg_match('/^[0-9]+\.[0-9]+$/', $response)) {
+	if (!preg_match('/^-?[0-9]$/', $response) && !preg_match('/^-?[0-9]+\.[0-9]+$/', $response)) {
         return false;
 	}
 

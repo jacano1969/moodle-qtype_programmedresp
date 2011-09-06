@@ -689,9 +689,14 @@ class programmedresp_qtype extends default_questiontype {
            return 1;
         }
         
+        // Just for 0 values
+        if ($result === 0 && $response == '') {
+        	return 1;
+        }
+        
         // If it's not an integer nor a float it's a string
         if (!programmedresp_is_numeric($response)) {
-            // It has been previoulsy tested strval() vs strval()
+            // strval() vs strval() has been previously tested 
             return 0;
         }
         
@@ -836,8 +841,8 @@ class programmedresp_qtype extends default_questiontype {
 //        }
         
         // Vars
-        fwrite($bf, start_tag('VARS', $level, true));
         if ($vars) {
+        	fwrite($bf, start_tag('VARS', $level, true));
 	        foreach ($vars as $var) {
 	            
 	            fwrite($bf, start_tag('VAR', $level + 1, true));
@@ -847,8 +852,8 @@ class programmedresp_qtype extends default_questiontype {
 	            fwrite($bf, end_tag('VAR', $level + 1, true));
 	            $varsmap[$var->id] = $var->varname;
 	        }
+	        fwrite($bf, end_tag('VARS', $level, true));
         }
-        fwrite($bf, end_tag('VARS', $level, true));
         
         // Args
         $concatvars = array();
