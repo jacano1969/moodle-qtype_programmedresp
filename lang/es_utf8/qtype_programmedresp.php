@@ -65,6 +65,7 @@ $string['paramtypearray'] = 'Vector';
 $string['paramtypefloat'] = 'Float';
 $string['paramtypeinteger'] = 'Entero';
 $string['parentcategory'] = 'Categoria padre';
+$string['pluginname'] = 'Respuestas programadas';
 $string['refresharguments'] = 'Actualizar argumentos';
 $string['refreshvarsvalues'] = 'Actualizar valores de las variables';
 $string['response'] = 'Respuesta';

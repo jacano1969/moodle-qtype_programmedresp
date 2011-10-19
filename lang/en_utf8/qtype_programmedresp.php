@@ -65,6 +65,7 @@ $string['paramtypearray'] = 'Vector';
 $string['paramtypefloat'] = 'Rational';
 $string['paramtypeinteger'] = 'Integer';
 $string['parentcategory'] = 'Parent category';
+$string['pluginname'] = 'Programmed responses';
 $string['refresharguments'] = 'Refresh arguments';
 $string['refreshvarsvalues'] = 'Refresh vars values';
 $string['response'] = 'Response';
