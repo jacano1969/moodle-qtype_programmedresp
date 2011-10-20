@@ -36,7 +36,7 @@ The variables only accepts alphanumeric characters.
 #2nd step (optional, depends on the first step): Each variable must define the maximum and minimum values it 
 can take, the increment and the number of values, to allow vectorial variables.
 
-#3rd step (optional): Add concat variables, useful if there should be a vectorial variable which values should follow 
+#3rd step (optional): Add concat variables, useful if there should be a vectorial variable which values follows 
 different criteria
 
 #4th step: Select the function which will calculate the answer (read ADDING FUNCTIONS to know how to add functions)
@@ -72,14 +72,15 @@ an array the return phpdoc tag should follow this format "@return array Descript
 
 
 GUIDED QUIZ MODULE LINKAGE
-// TODO
-
+There is another function argument type, the "mod_guidedquiz" moodle plugin is a quiz which allows the addition of variables to the quiz
+text, following the variables format described above; this argument type allows users to use these guided quiz variables as a function
+argument.
 
 INSTALL
 Follow the usual installation instructions
 
 CREDITS
-Tool designed by Josep Maria Mateo, Carme Olivé and Dolor Puigjaner, members of DEQ <http://www.etseq.urv.es/DEQ/> and 
+Tool designed by Josep Maria Mateo, Carme Olivé and Dolors Puigjaner, members of DEQ <http://www.etseq.urv.es/DEQ/> and 
 DEIM <http://deim.urv.cat> departments of the Universitat Rovira i Virgili.
 
 Consultoria Mosaic <http://www.consultoriamosaic.net>
