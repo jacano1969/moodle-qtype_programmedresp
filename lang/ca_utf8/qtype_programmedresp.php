@@ -77,6 +77,7 @@ $string['tolerancenominal'] = 'Nominal';
 $string['tolerancerelative'] = 'Relativa';
 $string['tolerancetype'] = 'Tipus de tolerància';
 $string['type'] = 'Tipus';
+$string['upgradeguidedquiz2011102000'] = 'Si tens instalat el mòdul d\'activitat guidedquiz, actualitza-la com a mínim a la versió 2011102000';
 $string['valueincrement'] = 'Increment';
 $string['var'] = 'Variable';
 $string['varsvalues'] = 'Valors de les variables';

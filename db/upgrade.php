@@ -94,6 +94,25 @@ function xmldb_qtype_programmedresp_upgrade($oldversion=0) {
         }
     }
     
+    // Adapting to the frankenstyle
+    if ($result && $oldversion < 2011102000) {
+    	
+    	$tablenames = array('programmedresp', 'programmedresp_arg', 'programmedresp_conc', 
+    	   'programmedresp_f', 'programmedresp_fcat', 'programmedresp_resp', 'programmedresp_val',
+    	   'programmedresp_var');
+    	
+    	foreach ($tablenames as $tablename) {
+    		
+    		$oldname = 'question_' . $tablename;
+    		$newname = 'qtype_' . $tablename;
+    		
+    		$table = new XMLDBTable($oldname);
+            $result = $result && rename_table($table, $newname);
+    	}
+        
+        notify(get_string('upgradeguidedquiz2011102000', 'qtype_programmedresp') . '!');
+    }
+    
     return $result;
 }
 

@@ -33,7 +33,7 @@ switch ($action) {
 	case 'addcategory':
 		
         $catoptions[0] = get_string('root', 'qtype_programmedresp');
-		$categories = get_records('question_programmedresp_fcat', '', '', 'id ASC', 'id, parent, name');
+		$categories = get_records('qtype_programmedresp_fcat', '', '', 'id ASC', 'id, parent, name');
 		if ($categories) {
 	        foreach ($categories as $key => $cat) {
 	            if (empty($catoptions[$cat->id])) {
@@ -51,7 +51,7 @@ switch ($action) {
 
             $catdata->parent = $data->parent;
 			$catdata->name = $data->name;
-			if (!$catdata->id = insert_record('question_programmedresp_fcat', $catdata)) {
+			if (!$catdata->id = insert_record('qtype_programmedresp_fcat', $catdata)) {
 				print_error('errordb', 'qtype_programmedresp');
 			}
 			
@@ -107,7 +107,7 @@ switch ($action) {
             } else {
 	            
 	            foreach ($functions as $function) {
-	            	if (get_record('question_programmedresp_f', 'name', $function->name) || programmedresp_get_function_code($function->name)) {
+	            	if (get_record('qtype_programmedresp_f', 'name', $function->name) || programmedresp_get_function_code($function->name)) {
 	            		notify($function->name.': '.get_string('errorfunctionalreadycreated', 'qtype_programmedresp'), 'error');
 	            		continue;
 	            	}
@@ -119,7 +119,7 @@ switch ($action) {
 	                $fdata->results = addslashes(programmedresp_serialize($function->results));
 	                $fdata->timeadded = time();
 
-	                if (!$fdata->id = insert_record('question_programmedresp_f', $fdata)) {
+	                if (!$fdata->id = insert_record('qtype_programmedresp_f', $fdata)) {
 	                    print_error('errordb', 'qtype_programmedresp');
 	                }
 	                

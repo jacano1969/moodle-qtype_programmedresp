@@ -32,15 +32,15 @@ class question_edit_programmedresp_form extends question_edit_form {
     	echo '<link rel="stylesheet" type="text/css" href="'.$CFG->wwwroot.'/question/type/programmedresp/styles.css" />';
     	
     	// Data
-    	$categories = get_records('question_programmedresp_fcat', '', '', 'id ASC', 'id, parent, name');
+    	$categories = get_records('qtype_programmedresp_fcat', '', '', 'id ASC', 'id, parent, name');
     	
     	// If there are previous data
     	if (!empty($this->question->id)) {
-    		$this->programmedresp = get_record('question_programmedresp', 'question', $this->question->id);
-    		$this->programmedresp_f = get_record('question_programmedresp_f', 'id', $this->programmedresp->programmedrespfid);
-    		$this->programmedresp_vars = get_records('question_programmedresp_var', 'programmedrespid', $this->programmedresp->id);
-    		$this->programmedresp_args = get_records('question_programmedresp_arg', 'programmedrespid', $this->programmedresp->id, '', 'argkey, type, value');
-    		$this->programmedresp_resps = get_records('question_programmedresp_resp', 'programmedrespid', $this->programmedresp->id, 'returnkey ASC', 'returnkey, label');
+    		$this->programmedresp = get_record('qtype_programmedresp', 'question', $this->question->id);
+    		$this->programmedresp_f = get_record('qtype_programmedresp_f', 'id', $this->programmedresp->programmedrespfid);
+    		$this->programmedresp_vars = get_records('qtype_programmedresp_var', 'programmedrespid', $this->programmedresp->id);
+    		$this->programmedresp_args = get_records('qtype_programmedresp_arg', 'programmedrespid', $this->programmedresp->id, '', 'argkey, type, value');
+    		$this->programmedresp_resps = get_records('qtype_programmedresp_resp', 'programmedrespid', $this->programmedresp->id, 'returnkey ASC', 'returnkey, label');
     	}
     	
     	$catoptions = array(0 => '&nbsp;('.get_string('selectcategory', 'qtype_programmedresp').')&nbsp;');

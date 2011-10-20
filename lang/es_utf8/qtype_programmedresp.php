@@ -77,6 +77,7 @@ $string['tolerancenominal'] = 'Nominal';
 $string['tolerancerelative'] = 'Relativa';
 $string['tolerancetype'] = 'Tipo de tolerancia';
 $string['type'] = 'Tipo';
+$string['upgradeguidedquiz2011102000'] = 'Si tienes instalado el módulo de actividad guidedquiz, actualízala como mínimo a la versión 2011102000';
 $string['valueincrement'] = 'Incremento';
 $string['var'] = 'Variable';
 $string['varsvalues'] = 'Valores de las variables';

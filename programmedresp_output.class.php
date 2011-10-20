@@ -128,7 +128,7 @@ class programmedresp_output {
         
     	// Retrieving category functions
     	if ($categoryid) {
-	        $functions = get_records('question_programmedresp_f', 'programmedrespfcatid', $categoryid);
+	        $functions = get_records('qtype_programmedresp_f', 'programmedrespfcatid', $categoryid);
 	        if (!$functions) {
 	            $this->print_form_html(get_string('errornofunctions', 'qtype_programmedresp'));
 	        }
@@ -162,7 +162,7 @@ class programmedresp_output {
         }
         
         // Function data
-        $functiondata = get_record('question_programmedresp_f', 'id', $functionid);
+        $functiondata = get_record('qtype_programmedresp_f', 'id', $functionid);
         $functiondata->params = programmedresp_unserialize($functiondata->params);
         $functiondata->results = programmedresp_unserialize($functiondata->results);
 

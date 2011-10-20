@@ -93,7 +93,7 @@ function programmedresp_get_concat_vars($args = false) {
  */
 function programmedresp_get_concatvar_data($id) {
 
-	$data = get_record('question_programmedresp_conc', 'id', $id);
+	$data = get_record('qtype_programmedresp_conc', 'id', $id);
 	if (!$data) {
 		print_error('errornoconcatvar', 'qtype_programmedresp');
 	}
