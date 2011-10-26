@@ -71,9 +71,9 @@ The '1' after the 'float' on the @return phpdoc tag indicates that the function 
 an array the return phpdoc tag should follow this format "@return array Description1|Description2" using the "|" character as separator
 
 
-GUIDED QUIZ MODULE LINKAGE
+SECTIONS QUIZ MODULE LINKAGE
 There is another function argument type, the "mod_guidedquiz" moodle plugin is a quiz which allows the addition of variables to the quiz
-text, following the variables format described above; this argument type allows users to use these guided quiz variables as a function
+text, following the variables format described above; this argument type allows users to use these sections quiz variables as a function
 argument.
 
 INSTALL
