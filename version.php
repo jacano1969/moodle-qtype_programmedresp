@@ -2,7 +2,7 @@
 
 $plugin->version  = 2011102000;
 $plugin->requires = 2007101509;
-$plugin->release = '1.0 (Build: 2011102000)';
+$plugin->release = '1.1 (Build: 2011102000)';
 
 // To avoid 1.9 Notice
 if (!defined('MATURITY_STABLE')) {
