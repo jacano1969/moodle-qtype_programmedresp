@@ -73,10 +73,10 @@ value. If the function returns an array the return phpdoc tag should follow this
 format "@return array Description1|Description2" using the "|" character as separator
 
 
-SECTIONS QUIZ MODULE LINKAGE
-There is another function argument type, the sections quiz type. The "mod_guidedquiz" moodle plugin 
+GUIDED QUIZ MODULE LINKAGE
+There is another function argument type, the guided quiz type. The "mod_guidedquiz" moodle plugin 
 is a quiz which allows the addition of variables to the quiz text, following the variables format 
-described above; this argument type allows users to use these sections quiz variables as a function
+described above; this argument type allows users to use these guided quiz variables as a function
 argument.
 
 INSTALL
