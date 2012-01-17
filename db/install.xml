@@ -129,7 +129,7 @@
     <TABLE NAME="qtype_programmedresp_conc" COMMENT="Concatenated vars" PREVIOUS="qtype_programmedresp_val">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="origin"/>
-        <FIELD NAME="origin" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="/question/" SEQUENCE="false" ENUM="true" ENUMVALUES="'question', 'quiz'" PREVIOUS="id" NEXT="instanceid"/>
+        <FIELD NAME="origin" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="question" SEQUENCE="false" ENUM="true" ENUMVALUES="'question', 'quiz'" PREVIOUS="id" NEXT="instanceid"/>
         <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="It references to the programmedresp id or to the guidedquiz id" PREVIOUS="origin" NEXT="name"/>
 
         <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" ENUM="false" COMMENT="The concat var name" PREVIOUS="instanceid" NEXT="vars"/>
