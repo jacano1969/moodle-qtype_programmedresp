@@ -1032,7 +1032,7 @@ class programmedresp_qtype extends default_questiontype {
             }
 
             // Adding the functions to the default functions category
-//            $function->programmedrespfcatid = programmedresp_check_base_functions_category();
+            $function->programmedrespfcatid = programmedresp_check_base_functions_category();
             if (!$function->id = insert_record('qtype_programmedresp_f', $function)) {
                 return false;
             }
