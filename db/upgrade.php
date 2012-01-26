@@ -1,6 +1,6 @@
 <?php
 
-require_once($CFG->dirroot.'/mod/assignment/type/programmedresp/lib.php');
+require_once($CFG->dirroot.'/question/type/programmedresp/lib.php');
     
 function xmldb_qtype_programmedresp_upgrade($oldversion=0) {
 
