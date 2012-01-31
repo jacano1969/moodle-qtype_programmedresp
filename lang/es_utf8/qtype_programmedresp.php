@@ -2,7 +2,7 @@
 
 /**
  * The spanish language strings for the Programmed response question type.
- *    
+ *
  * @copyright 2010 David Monllaó <david.monllao@urv.cat>
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package qtype_programmedresp
@@ -22,13 +22,13 @@ $string['assignvarsvalues'] = 'Asignar valors a las variables';
 $string['cancelconcatvar'] = 'Cancelar variable';
 $string['closewindow'] = 'Cerrar ventana';
 $string['confirmconcatvar'] = 'Confirmar variable';
-$string['questionresultslabels'] = 'Etiquetas de la respuestas de la pregunta';
 $string['editingprogrammedresp'] = 'Editando preguntas programadas';
 $string['editresponselabels'] = 'Editar etiquetas de las respuestas';
 $string['errorargumentnoassigned'] = 'Hay un argumento de tipo cuestionario guiado que no se ha assignado a ninguna variable';
 $string['errorcantaccessfile'] = 'No se puede acceder al archivo de funciones';
 $string['errorcantfindvar'] = 'No se puede encontrar la variable $a';
 $string['errorcantpreview'] = 'Las preguntas programadas no se pueden previsualizar fuera de un cuestionario';
+$string['errordangerousfunction'] = 'Contenido peligroso';
 $string['errordb'] = 'Error de base de datos';
 $string['erroreditformnotcompleted'] = 'Pregunta incompleta, revisa las variables y la función asignada';
 $string['errorfunctionalreadycreated'] = 'Función creada anteriormente';
@@ -66,6 +66,7 @@ $string['paramtypefloat'] = 'Float';
 $string['paramtypeinteger'] = 'Entero';
 $string['parentcategory'] = 'Categoria padre';
 $string['pluginname'] = 'Respuestas programadas';
+$string['questionresultslabels'] = 'Etiquetas de la respuestas de la pregunta';
 $string['refresharguments'] = 'Actualizar argumentos';
 $string['refreshvarsvalues'] = 'Actualizar valores de las variables';
 $string['response'] = 'Respuesta';

@@ -1,8 +1,8 @@
 <?PHP
 
-$plugin->version  = 2012012601;
+$plugin->version  = 2012013100;
 $plugin->requires = 2007101509;
-$plugin->release = '1.5 (Build: 2012012601)';
+$plugin->release = '1.6 (Build: 2012013100)';
 
 // To avoid 1.9 Notice
 if (!defined('MATURITY_STABLE')) {

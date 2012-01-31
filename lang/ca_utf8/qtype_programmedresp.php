@@ -2,7 +2,7 @@
 
 /**
  * The catalan language strings for the Programmed response question type.
- *    
+ *
  * @copyright 2010 David Monllaó <david.monllao@urv.cat>
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package qtype_programmedresp
@@ -22,13 +22,13 @@ $string['assignvarsvalues'] = 'Assignar valors a les variables';
 $string['cancelconcatvar'] = 'Cancel·lar variable';
 $string['closewindow'] = 'Tanca finestra';
 $string['confirmconcatvar'] = 'Confirmar variable';
-$string['questionresultslabels'] = 'Etiquetes de les respostes';
 $string['editingprogrammedresp'] = 'Editant pregunta programada';
 $string['editresponselabels'] = 'Edita les etiquetes de les respostes';
 $string['errorargumentnoassigned'] = 'Hi ha un argument de tipus qüestionari guiat que no té cap variable assignada';
 $string['errorcantaccessfile'] = 'No es pot accedir a l\'arxiu de funcions';
 $string['errorcantfindvar'] = 'No es pot trobar la variable $a';
 $string['errorcantpreview'] = 'Les preguntes programades no es poden previsualitzar fora d\'un qüestionari';
+$string['errordangerousfunction'] = 'Contingut perillós';
 $string['errordb'] = 'Error de base de dades';
 $string['erroreditformnotcompleted'] = 'Pregunta incompleta, revisa les variables i la funció assignada';
 $string['errorfunctionalreadycreated'] = 'Funció ja creada';
@@ -66,6 +66,7 @@ $string['paramtypeinteger'] = 'Enter';
 $string['paramtypefloat'] = 'Float';
 $string['parentcategory'] = 'Categoria pare';
 $string['pluginname'] = 'Respostes programades';
+$string['questionresultslabels'] = 'Etiquetes de les respostes';
 $string['refresharguments'] = 'Actualitzar arguments';
 $string['refreshvarsvalues'] = 'Actualitzar valors de les variables';
 $string['response'] = 'Resposta';

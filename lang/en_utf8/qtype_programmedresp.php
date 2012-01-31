@@ -2,7 +2,7 @@
 
 /**
  * The english language strings for the Programmed response question type.
- *    
+ *
  * @copyright 2010 David Monllaó <david.monllao@urv.cat>
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package qtype_programmedresp
@@ -22,13 +22,13 @@ $string['assignvarsvalues'] = 'Assign variables values';
 $string['cancelconcatvar'] = 'Cancel variable';
 $string['closewindow'] = 'Close window';
 $string['confirmconcatvar'] = 'Confirm variable';
-$string['questionresultslabels'] = 'Question results labels';
 $string['editingprogrammedresp'] = 'Editing Programmed response';
 $string['editresponselabels'] = 'Edit response labels';
 $string['errorargumentnoassigned'] = 'There is a guided quiz argument without var assigned';
 $string['errorcantaccessfile'] = 'Functions file is not accessible';
 $string['errorcantfindvar'] = 'The variable $a can not be found';
 $string['errorcantpreview'] = 'Programmed responses questions can not be previewed without being part of a quiz';
+$string['errordangerousfunction'] = 'Dangerous content!';
 $string['errordb'] = 'DB error';
 $string['erroreditformnotcompleted'] = 'Incomplete question, check the variables and the assigned function';
 $string['errorfunctionalreadycreated'] = 'Function already created';
@@ -66,6 +66,7 @@ $string['paramtypefloat'] = 'Rational';
 $string['paramtypeinteger'] = 'Integer';
 $string['parentcategory'] = 'Parent category';
 $string['pluginname'] = 'Programmed responses';
+$string['questionresultslabels'] = 'Question results labels';
 $string['refresharguments'] = 'Refresh arguments';
 $string['refreshvarsvalues'] = 'Refresh vars values';
 $string['response'] = 'Response';
